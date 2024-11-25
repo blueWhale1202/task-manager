@@ -1,8 +1,11 @@
 "use client";
 
+import Link from "next/link";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { SignUpFormValues, signUpSchema } from "../schema";
+import { z } from "zod";
+import { registerSchema } from "../schema";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,13 +27,17 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { DotSeparator } from "@/components/dot-separator";
-import Link from "next/link";
+
 import { FaGithub } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 
+import { useRegister } from "../api/use-register";
+
+type FormValues = z.infer<typeof registerSchema>;
+
 export const SignUpCard = () => {
-    const form = useForm<SignUpFormValues>({
-        resolver: zodResolver(signUpSchema),
+    const form = useForm<FormValues>({
+        resolver: zodResolver(registerSchema),
         defaultValues: {
             name: "",
             email: "",
@@ -38,8 +45,10 @@ export const SignUpCard = () => {
         },
     });
 
-    const onSubmit = (values: SignUpFormValues) => {
-        console.log("🚀 ~ onSubmit ~ values:", values);
+    const { mutate, isPending } = useRegister();
+
+    const onSubmit = (values: FormValues) => {
+        mutate(values);
     };
 
     return (
@@ -124,10 +133,10 @@ export const SignUpCard = () => {
                         />
                         <Button
                             type="submit"
-                            disabled={false}
+                            disabled={isPending}
                             className="w-full"
                         >
-                            Sign Up
+                            Register
                         </Button>
                     </form>
                 </Form>

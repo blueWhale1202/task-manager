@@ -1,8 +1,11 @@
 "use client";
 
+import Link from "next/link";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { SignInFormValues, signInSchema } from "../schema";
+import { z } from "zod";
+import { loginSchema } from "../schema";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,21 +26,26 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { DotSeparator } from "@/components/dot-separator";
-import Link from "next/link";
 import { FaGithub } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
+import { useLogin } from "../api/use-login";
+
+type FormValues = z.infer<typeof loginSchema>;
 
 export const SignInCard = () => {
-    const form = useForm<SignInFormValues>({
-        resolver: zodResolver(signInSchema),
+    const form = useForm<FormValues>({
+        resolver: zodResolver(loginSchema),
         defaultValues: {
             email: "",
             password: "",
         },
     });
 
-    const onSubmit = (values: SignInFormValues) => {
+    const { mutate, isPending } = useLogin();
+
+    const onSubmit = (values: FormValues) => {
         console.log("🚀 ~ onSubmit ~ values:", values);
+        mutate(values);
     };
 
     return (
@@ -94,10 +102,10 @@ export const SignInCard = () => {
                         />
                         <Button
                             type="submit"
-                            disabled={false}
+                            disabled={isPending}
                             className="w-full"
                         >
-                            Login In
+                            Log In
                         </Button>
                     </form>
                 </Form>
