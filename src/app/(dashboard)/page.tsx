@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 
-import { UserButton } from "@/components/user-button";
 import { getCurrent } from "@/features/auth/actions";
 
 export default async function AppPage() {
@@ -10,9 +9,5 @@ export default async function AppPage() {
         redirect("/sign-in");
     }
 
-    return (
-        <div>
-            <UserButton />
-        </div>
-    );
+    return <div>This is the dashboard</div>;
 }
