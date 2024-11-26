@@ -16,7 +16,7 @@ import { useLogout } from "@/features/auth/api/use-logout";
 import { DotSeparator } from "./dot-separator";
 
 export const UserButton = () => {
-    const { data: user, isPending } = useCurrent();
+    const { data: user, isPending, isSuccess } = useCurrent();
     const { mutate: logout } = useLogout();
 
     if (isPending) {
@@ -25,6 +25,10 @@ export const UserButton = () => {
                 <Loader className="size-4 animate-spin text-muted-foreground" />
             </div>
         );
+    }
+
+    if (isSuccess && !user) {
+        return <div>User</div>;
     }
 
     if (!user) {

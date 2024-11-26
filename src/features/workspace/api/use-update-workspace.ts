@@ -3,27 +3,29 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InferRequestType, InferResponseType } from "hono";
 import { toast } from "sonner";
 
-const create = api.workspace.$post;
+const patch = api.workspace[":workspaceId"].$patch;
 
-type RequestType = InferRequestType<typeof create>;
-type ResponseType = InferResponseType<typeof create, 200>;
+type RequestType = InferRequestType<typeof patch>;
+type ResponseType = InferResponseType<typeof patch, 200>;
 
-export const useCreateWorkspace = () => {
+export const useUpdateWorkspace = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation<ResponseType, Error, RequestType>({
-        mutationFn: async ({ form }) => {
-            const response = await create({ form });
-            const data = await response.json();
+        mutationFn: async ({ form, param }) => {
+            const response = await patch({ form, param });
 
             if (!response.ok) {
-                throw new Error("Failed to create workspace");
+                throw new Error("Failed to update workspace");
             }
 
-            return data;
+            return await response.json();
         },
-        onSuccess: () => {
+        onSuccess: ({ data }) => {
             toast.success("Workspace created successfully");
             queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+            queryClient.invalidateQueries({
+                queryKey: ["workspace", data.$id],
+            });
         },
         onError: (error) => {
             toast.error(error.message);

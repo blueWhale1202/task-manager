@@ -24,9 +24,10 @@ import { Input } from "@/components/ui/input";
 import { DotSeparator } from "@/components/dot-separator";
 
 import { cn } from "@/lib/utils";
-import { ImageIcon } from "lucide-react";
+import { Workspace } from "@/types";
+import { ArrowLeft, ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCreateWorkspace } from "../api/use-create-workspace";
+import { useUpdateWorkspace } from "../api/use-update-workspace";
 
 type FormValues = z.infer<typeof workspaceSchema>;
 const MAX_SIZE = 1 * 1024 * 1024;
@@ -34,22 +35,24 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/jpg"];
 
 type Props = {
     onCancel?: () => void;
+    initialData: Workspace;
 };
 
-export const CreateWorkspaceForm = ({ onCancel }: Props) => {
+export const EditWorkspaceForm = ({ onCancel, initialData }: Props) => {
     const form = useForm<FormValues>({
         resolver: zodResolver(workspaceSchema),
         defaultValues: {
-            name: "",
+            ...initialData,
+            image: initialData.imageUrl ?? "",
         },
     });
 
     const inputRef = useRef<HTMLInputElement>(null);
-    const previewUrl = useRef<string | null>(null);
+    const previewUrl = useRef<string>(initialData.imageUrl ?? "");
 
     const router = useRouter();
 
-    const { mutate, isPending } = useCreateWorkspace();
+    const { mutate, isPending } = useUpdateWorkspace();
 
     const onSubmit = (values: FormValues) => {
         const finalValues = {
@@ -58,7 +61,7 @@ export const CreateWorkspaceForm = ({ onCancel }: Props) => {
         };
 
         mutate(
-            { form: finalValues },
+            { form: finalValues, param: { workspaceId: initialData.$id } },
             {
                 onSuccess: ({ data }) => {
                     form.reset();
@@ -102,9 +105,23 @@ export const CreateWorkspaceForm = ({ onCancel }: Props) => {
 
     return (
         <Card className="size-full border-none shadow-none">
-            <CardHeader className="p-7">
+            <CardHeader className="flex-row items-center gap-x-4 space-y-0 p-7">
+                <Button
+                    size="sm"
+                    variant="link"
+                    onClick={
+                        onCancel
+                            ? onCancel
+                            : () =>
+                                  router.push(`/workspaces/${initialData.$id}`)
+                    }
+                    className="border-none shadow-none"
+                >
+                    <ArrowLeft />
+                    Back
+                </Button>
                 <CardTitle className="text-xl font-bold">
-                    Create a new workspace
+                    {initialData.name}
                 </CardTitle>
             </CardHeader>
 
@@ -228,7 +245,7 @@ export const CreateWorkspaceForm = ({ onCancel }: Props) => {
                                 size="lg"
                                 disabled={isPending}
                             >
-                                Create Workspace
+                                Save Changes
                             </Button>
                         </div>
                     </form>

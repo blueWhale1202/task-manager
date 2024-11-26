@@ -4,6 +4,7 @@ import {
     MEMBERS_ID,
     WORKSPACE_ID,
 } from "@/config";
+import { getMember } from "@/features/members/lib/utils";
 import { MemberRole } from "@/features/members/types";
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { generateInvitedCode } from "@/lib/utils";
@@ -98,6 +99,73 @@ export const workspace = new Hono()
                     userId: user.$id,
                     workspaceId: workspace.$id,
                     role: MemberRole.ADMIN,
+                },
+            );
+
+            return c.json({ data: workspace });
+        },
+    )
+    .patch(
+        "/:workspaceId",
+        sessionMiddleware,
+        zValidator("form", workspaceSchema),
+        async (c) => {
+            const databases = c.get("databases");
+            const user = c.get("user");
+            const storage = c.get("storage");
+
+            const { name, image } = c.req.valid("form");
+            const { workspaceId } = c.req.param();
+
+            const member = await getMember({
+                databases,
+                userId: user.$id,
+                workspaceId,
+            });
+
+            if (!member || member.role !== MemberRole.ADMIN) {
+                return c.json(
+                    { message: "You are not allowed to perform this action" },
+                    403,
+                );
+            }
+
+            let uploadedImage: string | undefined;
+
+            if (image instanceof Blob) {
+                const fileId = ID.unique();
+                let extension = image.type.split("/")[1];
+
+                const file = new File(
+                    [image],
+                    `${name}_${fileId}.${extension}`,
+                    {
+                        type: image.type,
+                    },
+                );
+
+                const fileUploaded = await storage.createFile(
+                    IMAGES_BUCKET_ID,
+                    fileId,
+                    file,
+                );
+
+                const arrayBuffer = await storage.getFilePreview(
+                    IMAGES_BUCKET_ID,
+                    fileUploaded.$id,
+                );
+                uploadedImage = `data:${image.type};base64,${Buffer.from(arrayBuffer).toString("base64")}`;
+            } else {
+                uploadedImage = image;
+            }
+
+            const workspace = await databases.updateDocument(
+                DATABASE_ID,
+                WORKSPACE_ID,
+                workspaceId,
+                {
+                    name,
+                    imageUrl: uploadedImage,
                 },
             );
 

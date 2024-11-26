@@ -1,6 +1,10 @@
+"use client";
+
+import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
 import { cn } from "@/lib/utils";
 import { LucideIcon, Settings, Users } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { type IconType } from "react-icons";
 import {
     GoCheckCircle,
@@ -19,7 +23,7 @@ type Route = {
 const routes: Route[] = [
     {
         label: "Home",
-        href: "/",
+        href: "",
         icon: GoHome,
         activeIcon: GoHomeFill,
     },
@@ -44,16 +48,20 @@ const routes: Route[] = [
 ];
 
 export const Navigation = () => {
+    const pathname = usePathname();
+    const workspaceId = useWorkspaceId();
+
     return (
         <ul className="flex flex-col">
             {routes.map((route) => {
-                const isActive = false;
+                const fullHref = `/workspaces/${workspaceId}${route.href}`;
+                const isActive = pathname === fullHref;
                 const Icon = isActive ? route.activeIcon : route.icon;
 
                 return (
                     <li key={route.href} className="py-2">
                         <Link
-                            href={route.href}
+                            href={fullHref}
                             className={cn(
                                 "flex items-center gap-2.5 rounded-md p-2.5 font-medium text-neutral-500 transition hover:bg-white hover:text-primary",
                                 isActive &&
