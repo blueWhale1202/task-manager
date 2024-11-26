@@ -14,7 +14,7 @@ export const useLogout = () => {
             }
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["current"] });
+            queryClient.invalidateQueries();
             router.push("/sign-in");
         },
     });

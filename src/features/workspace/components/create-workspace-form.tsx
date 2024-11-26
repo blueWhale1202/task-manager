@@ -24,11 +24,12 @@ import { Input } from "@/components/ui/input";
 import { DotSeparator } from "@/components/dot-separator";
 
 import { ImageIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useCreateWorkspace } from "../api/use-create-workspace";
 
 type FormValues = z.infer<typeof workspaceSchema>;
 const MAX_SIZE = 1 * 1024 * 1024;
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/jpg", "image/svg+xml"];
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/jpg"];
 
 type Props = {
     onCancel?: () => void;
@@ -45,6 +46,8 @@ export const CreateWorkspaceForm = ({ onCancel }: Props) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const previewUrl = useRef<string | null>(null);
 
+    const router = useRouter();
+
     const { mutate, isPending } = useCreateWorkspace();
 
     const onSubmit = (values: FormValues) => {
@@ -56,8 +59,9 @@ export const CreateWorkspaceForm = ({ onCancel }: Props) => {
         mutate(
             { form: finalValues },
             {
-                onSuccess: () => {
+                onSuccess: ({ data }) => {
                     form.reset();
+                    router.push(`/workspaces/${data.$id}`);
                 },
             },
         );
@@ -80,7 +84,7 @@ export const CreateWorkspaceForm = ({ onCancel }: Props) => {
                 form.setError("image", {
                     type: "fileType",
                     message:
-                        "The file type is not supported. Only JPG, PNG, JPEG or SVG are allowed.",
+                        "The file type is not supported. Only JPG, PNG or JPEG are allowed.",
                 });
                 return;
             }
@@ -161,7 +165,7 @@ export const CreateWorkspaceForm = ({ onCancel }: Props) => {
                                                 Workspace Icon
                                             </p>
                                             <p className="text-sm text-muted-foreground">
-                                                JPG, PNG, JPEG pr SVG, max 1MB
+                                                JPG, PNG or JPEG, max 1MB
                                             </p>
 
                                             <input
