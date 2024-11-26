@@ -75,8 +75,12 @@ export const auth = new Hono()
     .post("/logout", sessionMiddleware, async (c) => {
         const account = c.get("account");
 
-        deleteCookie(c, AUTH_COOKIE_NAME);
-        await account.deleteSession("current");
+        try {
+            deleteCookie(c, AUTH_COOKIE_NAME);
+            await account.deleteSession("current");
 
-        return c.json({ message: "logout success" });
+            return c.json({ message: "logout success" });
+        } catch (error) {
+            return c.json({ message: INTERNAL_ERROR_MESSAGE }, 500);
+        }
     });

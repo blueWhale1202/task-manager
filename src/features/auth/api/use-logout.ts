@@ -7,7 +7,11 @@ export const useLogout = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: async () => {
-            await api.auth.logout.$post();
+            const response = await api.auth.logout.$post();
+
+            if (!response.ok) {
+                throw new Error("Failed to logout");
+            }
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["current"] });
