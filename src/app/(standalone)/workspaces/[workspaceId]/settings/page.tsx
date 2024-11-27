@@ -14,7 +14,7 @@ export default async function WorkspaceSettingPage({ params }: Props) {
     const initialData = await getWorkspace(workspaceId);
 
     if (!initialData) {
-        redirect(`/workspaces/${workspaceId}`);
+        redirect(`/`);
     }
 
     return (
