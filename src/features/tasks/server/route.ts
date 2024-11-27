@@ -116,13 +116,25 @@ export const tasks = new Hono()
                 Query.orderDesc("$createdAt"),
             ];
 
-            [projectId, assigneeId, status, dueDate].forEach((filter) => {
-                if (filter) {
-                    const filterName = Object.keys({ filter })[0];
-                    console.log(filterName, filter);
-                    query.push(Query.equal(filterName, filter));
-                }
-            });
+            if (projectId) {
+                console.log("projectId", projectId);
+                query.push(Query.equal("projectId", projectId));
+            }
+
+            if (assigneeId) {
+                console.log("assigneeId", assigneeId);
+                query.push(Query.equal("assigneeId", assigneeId));
+            }
+
+            if (status) {
+                console.log("status", status);
+                query.push(Query.equal("status", status));
+            }
+
+            if (dueDate) {
+                console.log("dueDate", dueDate);
+                query.push(Query.equal("dueDate", dueDate));
+            }
 
             if (search) {
                 console.log("search", search);

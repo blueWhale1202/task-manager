@@ -12,3 +12,10 @@ export const generateInvitedCode = () => {
         charset: charset(Charset.ALPHANUMERIC),
     })[0];
 };
+
+export const snakeCaseToTitleCase = (str: string) => {
+    return str
+        .toLowerCase()
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+};
