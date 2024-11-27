@@ -18,7 +18,8 @@ import { Fragment } from "react";
 import { useDeleteMember } from "../api/use-delete-member";
 import { useGetMembers } from "../api/use-get-members";
 import { useUpdateMember } from "../api/use-update-member";
-import { MemberRole } from "../types";
+
+import { MemberRole } from "@/types";
 import { MemberAvatar } from "./member-avatar";
 
 export const MembersList = () => {

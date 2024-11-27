@@ -5,10 +5,9 @@ import {
     WORKSPACE_ID,
 } from "@/config";
 import { getMember } from "@/features/members/lib/utils";
-import { MemberRole } from "@/features/members/types";
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { generateInvitedCode } from "@/lib/utils";
-import { Workspace } from "@/types";
+import { MemberRole, Workspace } from "@/types";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { ID, Query } from "node-appwrite";

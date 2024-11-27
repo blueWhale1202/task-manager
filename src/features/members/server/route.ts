@@ -1,9 +1,8 @@
 import { DATABASE_ID, MEMBERS_ID } from "@/config";
 import { getMember } from "@/features/members/lib/utils";
-import { MemberRole } from "@/features/members/types";
 import { createAdminClient } from "@/lib/appwrite";
 import { sessionMiddleware } from "@/lib/session-middleware";
-import { Member } from "@/types";
+import { Member, MemberRole } from "@/types";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { Query } from "node-appwrite";
