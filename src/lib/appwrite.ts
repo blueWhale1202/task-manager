@@ -2,7 +2,7 @@ import "server-only";
 
 import { AUTH_COOKIE_NAME } from "@/features/auth/constants";
 import { cookies } from "next/headers";
-import { Account, Client, Databases } from "node-appwrite";
+import { Account, Client, Databases, Users } from "node-appwrite";
 import { cache } from "react";
 
 export const createSessionClient = cache(async () => {
@@ -37,6 +37,10 @@ export const createAdminClient = cache(async () => {
     return {
         get account() {
             return new Account(client);
+        },
+
+        get users() {
+            return new Users(client);
         },
     };
 });

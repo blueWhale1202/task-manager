@@ -9,7 +9,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Loader, LogOut } from "lucide-react";
+import { Loader, LogOut, TriangleAlert } from "lucide-react";
 
 import { useCurrent } from "@/features/auth/api/use-current";
 import { useLogout } from "@/features/auth/api/use-logout";
@@ -28,7 +28,11 @@ export const UserButton = () => {
     }
 
     if (isSuccess && !user) {
-        return <div>User</div>;
+        return (
+            <div className="flex size-10 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
+                <TriangleAlert className="size-4 text-destructive" />
+            </div>
+        );
     }
 
     if (!user) {

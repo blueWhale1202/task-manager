@@ -8,9 +8,11 @@ import { getMember } from "@/features/members/lib/utils";
 import { MemberRole } from "@/features/members/types";
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { generateInvitedCode } from "@/lib/utils";
+import { Workspace } from "@/types";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { ID, Query } from "node-appwrite";
+import { z } from "zod";
 import { workspaceSchema } from "../schemas";
 
 export const workspace = new Hono()
@@ -166,6 +168,116 @@ export const workspace = new Hono()
                 {
                     name,
                     imageUrl: uploadedImage,
+                },
+            );
+
+            return c.json({ data: workspace });
+        },
+    )
+    .delete("/:workspaceId", sessionMiddleware, async (c) => {
+        const databases = c.get("databases");
+        const user = c.get("user");
+
+        const { workspaceId } = c.req.param();
+
+        const member = await getMember({
+            databases,
+            userId: user.$id,
+            workspaceId,
+        });
+
+        if (!member || member.role !== MemberRole.ADMIN) {
+            return c.json(
+                { message: "You are not allowed to perform this action" },
+                403,
+            );
+        }
+
+        await databases.deleteDocument(DATABASE_ID, WORKSPACE_ID, workspaceId);
+
+        return c.json({ data: { $id: workspaceId } });
+    })
+    .post("/:workspaceId/reset-code", sessionMiddleware, async (c) => {
+        const databases = c.get("databases");
+        const user = c.get("user");
+
+        const { workspaceId } = c.req.param();
+
+        const member = await getMember({
+            databases,
+            userId: user.$id,
+            workspaceId,
+        });
+
+        if (!member || member.role !== MemberRole.ADMIN) {
+            return c.json(
+                { message: "You are not allowed to perform this action" },
+                403,
+            );
+        }
+
+        const workspace = await databases.updateDocument(
+            DATABASE_ID,
+            WORKSPACE_ID,
+            workspaceId,
+            {
+                inviteCode: generateInvitedCode(),
+            },
+        );
+
+        return c.json({ data: workspace });
+    })
+    .post(
+        "/:workspaceId/join",
+        sessionMiddleware,
+        zValidator(
+            "json",
+            z.object({
+                code: z.string().length(6),
+            }),
+        ),
+        async (c) => {
+            const databases = c.get("databases");
+            const user = c.get("user");
+
+            const { workspaceId } = c.req.param();
+            const { code } = c.req.valid("json");
+
+            const member = await getMember({
+                databases,
+                userId: user.$id,
+                workspaceId,
+            });
+
+            if (member) {
+                return c.json(
+                    { message: "You are already a member of this workspace" },
+                    400,
+                );
+            }
+
+            const workspace = await databases.getDocument<Workspace>(
+                DATABASE_ID,
+                WORKSPACE_ID,
+                workspaceId,
+            );
+
+            if (!workspace) {
+                return c.json({ message: "Workspace not found" }, 404);
+            }
+
+            if (workspace.inviteCode !== code) {
+                return c.json({ message: "Invalid code" }, 400);
+            }
+
+            await databases.createDocument(
+                DATABASE_ID,
+                MEMBERS_ID,
+                ID.unique(),
+                {
+                    userId: user.$id,
+                    workspaceId,
+                    role: MemberRole.MEMBER,
                 },
             );
 

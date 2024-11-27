@@ -1,3 +1,4 @@
+import { MemberRole } from "@/features/members/types";
 import { Models } from "node-appwrite";
 
 export type AppwriteException = {
@@ -11,4 +12,10 @@ export type Workspace = Models.Document & {
     imageUrl: string;
     userId: string;
     inviteCode: string;
+};
+
+export type Member = Models.Document & {
+    workspaceId: string;
+    userId: string;
+    role: MemberRole;
 };
