@@ -1,9 +1,14 @@
-import { DotSeparator } from "@/components/dot-separator";
+"use client";
+
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+
+import { DotSeparator } from "@/components/dot-separator";
 import { TaskExtend } from "@/types";
+
 import { Pencil, X } from "lucide-react";
-import { useState } from "react";
 import { useUpdateTask } from "../api/use-update-task";
 
 type Props = {

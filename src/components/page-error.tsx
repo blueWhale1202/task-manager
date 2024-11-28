@@ -1,6 +1,7 @@
-import { TriangleAlert } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
+
+import { TriangleAlert } from "lucide-react";
 
 type Props = {
     message?: string;

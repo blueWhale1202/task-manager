@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -6,6 +5,8 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryProvider } from "@/providers/query-provider";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+
+import { cn } from "@/lib/utils";
 
 const inter = Inter({
     subsets: ["latin"],

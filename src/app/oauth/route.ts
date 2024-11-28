@@ -1,9 +1,8 @@
-// src/app/oauth/route.js
+import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
 
 import { AUTH_COOKIE_NAME } from "@/features/auth/constants";
 import { createAdminClient } from "@/lib/appwrite";
-import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     const userId = request.nextUrl.searchParams.get("userId");

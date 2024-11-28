@@ -25,10 +25,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { DotSeparator } from "@/components/dot-separator";
-import { signInWithGithub, signInWithGoogle } from "@/lib/oauth";
 import { FaGithub } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
+
+import { DotSeparator } from "@/components/dot-separator";
+
+import { signInWithGithub, signInWithGoogle } from "@/lib/oauth";
 import { useLogin } from "../api/use-login";
 
 type FormValues = z.infer<typeof loginSchema>;

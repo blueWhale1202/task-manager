@@ -1,11 +1,15 @@
-import { DotSeparator } from "@/components/dot-separator";
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+
+import { Settings } from "lucide-react";
+
+import { DotSeparator } from "@/components/dot-separator";
+import { MemberAvatar } from "./member-avatar";
+
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
 import { Member } from "@/types";
-import { Settings } from "lucide-react";
-import Link from "next/link";
-import { MemberAvatar } from "./member-avatar";
 
 type MemberExtend = Member & {
     name: string;

@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+
 import { MobileSidebar } from "./mobile-sidebar";
 import { UserButton } from "./user-button";
 

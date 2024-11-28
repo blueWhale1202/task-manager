@@ -1,10 +1,13 @@
+import { useRouter } from "next/navigation";
+
+import { Project, TaskExtend, TaskStatus } from "@/types";
+import { STATUS_COLOR_MAP } from "../constants";
+
 import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
+
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
 import { cn } from "@/lib/utils";
-import { Project, TaskExtend, TaskStatus } from "@/types";
-import { useRouter } from "next/navigation";
-import { STATUS_COLOR_MAP } from "../constants";
 
 type Props = {
     id: string;

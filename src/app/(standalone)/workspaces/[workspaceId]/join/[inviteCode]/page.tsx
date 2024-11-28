@@ -2,8 +2,10 @@
 
 import { PageError } from "@/components/page-error";
 import { PageLoader } from "@/components/page-loader";
-import { useGetWorkspaceInfo } from "@/features/workspace/api/use-get-workspace-info";
+
 import { JoinWorkspaceForm } from "@/features/workspace/components/join-workspace-form";
+
+import { useGetWorkspaceInfo } from "@/features/workspace/api/use-get-workspace-info";
 import { useInviteCode } from "@/features/workspace/hooks/use-invite-code";
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
 

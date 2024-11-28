@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, useRef } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,12 +23,12 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { DotSeparator } from "@/components/dot-separator";
+import { ArrowLeft, ImageIcon } from "lucide-react";
 
-import { useConfirm } from "@/hooks/use-confirm";
 import { cn } from "@/lib/utils";
 import { Project } from "@/types";
-import { ArrowLeft, ImageIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+
+import { useConfirm } from "@/hooks/use-confirm";
 import { useDeleteProject } from "../api/use-delete-project";
 import { useUpdateProject } from "../api/use-update-project";
 

@@ -1,6 +1,7 @@
-import { getCurrent } from "@/features/auth/queries/get-current";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+
+import { getCurrent } from "@/features/auth/queries/get-current";
 
 type Props = {
     children: React.ReactNode;

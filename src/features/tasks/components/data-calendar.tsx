@@ -2,15 +2,17 @@
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
-import { TaskExtend } from "@/types";
-import { format, getDay, parse, startOfWeek, subMonths } from "date-fns";
-import { enUS } from "date-fns/locale";
-
 import { useState } from "react";
-import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+
+import { TaskExtend } from "@/types";
 import { NAVIGATE } from "../types";
+
+import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import { CalendarToolbar } from "./calendar-toolbar";
 import { EventCard } from "./event-card";
+
+import { format, getDay, parse, startOfWeek, subMonths } from "date-fns";
+import { enUS } from "date-fns/locale";
 
 const locales = {
     "en-US": enUS,

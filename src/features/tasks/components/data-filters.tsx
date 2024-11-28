@@ -1,4 +1,5 @@
-import { DatePicker } from "@/components/date-picker";
+"use client";
+
 import {
     Select,
     SelectContent,
@@ -7,15 +8,20 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useGetMembers } from "@/features/members/api/use-get-members";
+
+import { DatePicker } from "@/components/date-picker";
 import { MemberAvatar } from "@/features/members/components/member-avatar";
-import { useGetProjects } from "@/features/projects/api/use-get-projects";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
-import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
-import { snakeCaseToTitleCase } from "@/lib/utils";
+
 import { TaskStatus } from "@/types";
 import { Folder, ListCheck, Loader, User2 } from "lucide-react";
+
+import { useGetMembers } from "@/features/members/api/use-get-members";
+import { useGetProjects } from "@/features/projects/api/use-get-projects";
+import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
 import { useTaskFilters } from "../hooks/use-task-filters";
+
+import { snakeCaseToTitleCase } from "@/lib/utils";
 
 type Props = {
     hideProjectFilter?: boolean;

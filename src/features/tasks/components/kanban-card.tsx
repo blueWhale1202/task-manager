@@ -1,8 +1,11 @@
+import { TaskExtend } from "@/types";
+
 import { DotSeparator } from "@/components/dot-separator";
+import { MoreHorizontal } from "lucide-react";
+
 import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
-import { TaskExtend } from "@/types";
-import { MoreHorizontal } from "lucide-react";
+
 import { TaskActions } from "./task-action";
 import { TaskDate } from "./task-date";
 

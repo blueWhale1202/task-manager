@@ -3,10 +3,12 @@
 import { DotSeparator } from "@/components/dot-separator";
 import { PageError } from "@/components/page-error";
 import { PageLoader } from "@/components/page-loader";
-import { useGetTask } from "@/features/tasks/api/use-get-task";
+
 import { TaskBreadcrumbs } from "@/features/tasks/components/task-breadcrumbs";
 import { TaskDescription } from "@/features/tasks/components/task-description";
 import { TaskOverview } from "@/features/tasks/components/task-overview";
+
+import { useGetTask } from "@/features/tasks/api/use-get-task";
 import { useTaskId } from "@/features/tasks/hooks/use-task-id";
 
 export default function TaskPage() {

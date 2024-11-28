@@ -1,6 +1,8 @@
+import { useRouter } from "next/navigation";
+
 import { api } from "@/lib/rpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+
 import { toast } from "sonner";
 
 export const useLogout = () => {

@@ -1,10 +1,13 @@
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
+import { Project, TaskExtend } from "@/types";
+
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
+import { ChevronRight, Trash } from "lucide-react";
+
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
 import { useConfirm } from "@/hooks/use-confirm";
-import { Project, TaskExtend } from "@/types";
-import { ChevronRight, Trash } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDeleteTask } from "../api/use-delete-task";
 

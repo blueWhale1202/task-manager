@@ -1,15 +1,18 @@
 "use client";
 
-import { PageError } from "@/components/page-error";
-import { PageLoader } from "@/components/page-loader";
-import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+import { PageError } from "@/components/page-error";
+import { PageLoader } from "@/components/page-loader";
+
+import { cn } from "@/lib/utils";
 import { RiAddCircleFill } from "react-icons/ri";
+import { ProjectAvatar } from "./project-avatar";
+
+import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
 import { useGetProjects } from "../api/use-get-projects";
 import { useCreateProjectModal } from "../hooks/use-create-project-modal";
-import { ProjectAvatar } from "./project-avatar";
 
 export const Projects = () => {
     const workspaceId = useWorkspaceId();

@@ -24,16 +24,19 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
+import { DatePicker } from "@/components/date-picker";
 import { DotSeparator } from "@/components/dot-separator";
 
-import { DatePicker } from "@/components/date-picker";
 import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
-import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
-import { cn } from "@/lib/utils";
+
 import { Task, TaskStatus } from "@/types";
-import { useUpdateTask } from "../api/use-update-task";
 import { MemberOption, ProjectOption } from "../types";
+
+import { cn } from "@/lib/utils";
+
+import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
+import { useUpdateTask } from "../api/use-update-task";
 
 type FormValues = z.infer<typeof taskSchema>;
 

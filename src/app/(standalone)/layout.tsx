@@ -1,8 +1,10 @@
-import { UserButton } from "@/components/user-button";
-import { getCurrent } from "@/features/auth/queries/get-current";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
+import { UserButton } from "@/components/user-button";
+
+import { getCurrent } from "@/features/auth/queries/get-current";
 
 type Props = {
     children: React.ReactNode;

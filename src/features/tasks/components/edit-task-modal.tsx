@@ -1,8 +1,9 @@
 "use client";
 
 import { ResponsiveModal } from "@/components/responsive-modal";
-import { useEditTaskModal } from "../hooks/use-edit-task-modal";
 import { EditTaskWrapper } from "./edit-task-wrapper";
+
+import { useEditTaskModal } from "../hooks/use-edit-task-modal";
 
 export const EditTaskModal = () => {
     const { taskId, close } = useEditTaskModal();

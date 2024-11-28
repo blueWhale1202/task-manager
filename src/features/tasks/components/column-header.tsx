@@ -1,6 +1,7 @@
-import { Button } from "@/components/ui/button";
 import { Task } from "@/types";
 import { Column } from "@tanstack/react-table";
+
+import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 
 type Props = {

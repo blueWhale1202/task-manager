@@ -2,8 +2,10 @@
 
 import { PageError } from "@/components/page-error";
 import { PageLoader } from "@/components/page-loader";
-import { useGetWorkspace } from "@/features/workspace/api/use-get-workspace";
+
 import { EditWorkspaceForm } from "@/features/workspace/components/edit-workspace-form";
+
+import { useGetWorkspace } from "@/features/workspace/api/use-get-workspace";
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
 
 export default function WorkspaceSettingPage() {

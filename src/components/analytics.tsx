@@ -1,22 +1,11 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { ProjectAnalytics } from "@/features/projects/api/use-get-project-analytics";
+
 import { AnalyticCard } from "./analytic-card";
 import { DotSeparator } from "./dot-separator";
 
-type Props = ProjectAnalytics;
+import { ProjectAnalytics } from "@/features/projects/api/use-get-project-analytics";
 
-// data: {
-//     taskCount,
-//     taskDiff,
-//     assignedTaskCount,
-//     assignedTaskDiff,
-//     incompleteTaskCount,
-//     incompleteTaskDiff,
-//     completedTaskCount,
-//     completedTaskDiff,
-//     overdueTaskCount,
-//     overdueTaskDiff,
-// },
+type Props = ProjectAnalytics;
 
 export const Analytics = ({ data }: Props) => {
     return (

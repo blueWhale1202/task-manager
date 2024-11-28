@@ -1,9 +1,10 @@
 import "server-only";
 
+import { cache } from "react";
+
 import { AUTH_COOKIE_NAME } from "@/features/auth/constants";
 import { cookies } from "next/headers";
 import { Account, Client, Databases, Users } from "node-appwrite";
-import { cache } from "react";
 
 export const createSessionClient = cache(async () => {
     const client = new Client()

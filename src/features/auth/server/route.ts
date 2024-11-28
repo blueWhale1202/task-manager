@@ -2,11 +2,11 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { deleteCookie, setCookie } from "hono/cookie";
 
+import { AUTH_COOKIE_NAME, INTERNAL_ERROR_MESSAGE } from "../constants";
 import { loginSchema, registerSchema } from "../schema";
 
 import { createAdminClient } from "@/lib/appwrite";
 import { AppwriteException, ID } from "node-appwrite";
-import { AUTH_COOKIE_NAME, INTERNAL_ERROR_MESSAGE } from "../constants";
 
 import { sessionMiddleware } from "@/lib/session-middleware";
 

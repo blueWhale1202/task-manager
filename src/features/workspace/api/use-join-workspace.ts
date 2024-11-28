@@ -1,6 +1,7 @@
 import { api } from "@/lib/rpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InferRequestType, InferResponseType } from "hono";
+
 import { toast } from "sonner";
 
 const join = api.workspace[":workspaceId"]["join"].$post;

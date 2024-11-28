@@ -1,6 +1,7 @@
 "use client";
 
-import { format } from "date-fns";
+import { ClassName } from "@/types";
+
 import { Calendar as CalendarIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -10,8 +11,9 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
+
 import { cn } from "@/lib/utils";
-import { ClassName } from "@/types";
+import { format } from "date-fns";
 
 type Props = {
     value?: Date;

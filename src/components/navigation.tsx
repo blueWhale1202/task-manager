@@ -1,17 +1,20 @@
 "use client";
 
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
-import { cn } from "@/lib/utils";
-import { LucideIcon, Settings, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 import { type IconType } from "react-icons";
+
+import { LucideIcon, Settings, Users } from "lucide-react";
 import {
     GoCheckCircle,
     GoCheckCircleFill,
     GoHome,
     GoHomeFill,
 } from "react-icons/go";
+
+import { cn } from "@/lib/utils";
 
 type Route = {
     label: string;

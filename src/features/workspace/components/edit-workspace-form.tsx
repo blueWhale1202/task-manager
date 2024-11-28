@@ -1,6 +1,8 @@
 "use client";
 
+import { Workspace } from "@/types";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useRef } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,13 +24,12 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { DotSeparator } from "@/components/dot-separator";
+import { ArrowLeft, Copy, ImageIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 import { useConfirm } from "@/hooks/use-confirm";
-import { cn } from "@/lib/utils";
-import { Workspace } from "@/types";
-import { ArrowLeft, Copy, ImageIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { useDeleteWorkspace } from "../api/use-delete-workspace";
 import { useResetInviteCode } from "../api/use-reset-code";
 import { useUpdateWorkspace } from "../api/use-update-workspace";

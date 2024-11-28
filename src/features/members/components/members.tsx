@@ -1,6 +1,8 @@
 "use client";
 
-import { DotSeparator } from "@/components/dot-separator";
+import Link from "next/link";
+import { Fragment } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -10,19 +12,22 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+
+import { PageError } from "@/components/page-error";
+import { PageLoader } from "@/components/page-loader";
+import { ArrowLeft, Loader, MoreHorizontal, ShieldAlert } from "lucide-react";
+
+import { DotSeparator } from "@/components/dot-separator";
+import { MemberAvatar } from "./member-avatar";
+
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
 import { useConfirm } from "@/hooks/use-confirm";
-import { ArrowLeft, Loader, MoreHorizontal, ShieldAlert } from "lucide-react";
-import Link from "next/link";
-import { Fragment } from "react";
+
 import { useDeleteMember } from "../api/use-delete-member";
 import { useGetMembers } from "../api/use-get-members";
 import { useUpdateMember } from "../api/use-update-member";
 
-import { PageError } from "@/components/page-error";
-import { PageLoader } from "@/components/page-loader";
 import { MemberRole } from "@/types";
-import { MemberAvatar } from "./member-avatar";
 
 export const Members = () => {
     const workspaceId = useWorkspaceId();

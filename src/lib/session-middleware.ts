@@ -4,7 +4,6 @@ import { getCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
 
 import { AUTH_COOKIE_NAME } from "@/features/auth/constants";
-
 import { Account, Client, Databases, Models, Storage } from "node-appwrite";
 
 type AdditionalContext = {

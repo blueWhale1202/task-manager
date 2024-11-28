@@ -1,11 +1,14 @@
+import { redirect } from "next/navigation";
+
 import { Navbar } from "@/components/navbar";
 import { Sidebar } from "@/components/sidebar";
-import { getCurrent } from "@/features/auth/queries/get-current";
+
 import { CreateProjectModal } from "@/features/projects/components/create-project-modal";
 import { CreateTaskModal } from "@/features/tasks/components/create-task-modal";
 import { EditTaskModal } from "@/features/tasks/components/edit-task-modal";
 import { CreateWorkspaceModal } from "@/features/workspace/components/create-workspace-modal";
-import { redirect } from "next/navigation";
+
+import { getCurrent } from "@/features/auth/queries/get-current";
 
 type Props = {
     children: React.ReactNode;

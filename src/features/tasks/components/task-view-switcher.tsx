@@ -1,23 +1,29 @@
 "use client";
 
-import { DotSeparator } from "@/components/dot-separator";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useProjectId } from "@/features/projects/hooks/use-project-id";
-import { DataTable } from "@/features/tasks/components/data-table";
-import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
-import { Loader, Plus } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useCallback } from "react";
-import { useBulkUpdateTask } from "../api/use-bulk-update-task";
-import { useGetTasks } from "../api/use-get-tasks";
-import { useCreateTaskModal } from "../hooks/use-create-task-modal";
-import { useTaskFilters } from "../hooks/use-task-filters";
+
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import { Loader, Plus } from "lucide-react";
 import { UpdatePayload } from "../types";
+
+import { DotSeparator } from "@/components/dot-separator";
+import { DataTable } from "@/features/tasks/components/data-table";
+
 import { columns } from "./columns";
 import { DataCalendar } from "./data-calendar";
 import { DataFilters } from "./data-filters";
 import { DataKanban } from "./data-kanban";
+
+import { useProjectId } from "@/features/projects/hooks/use-project-id";
+import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
+
+import { useBulkUpdateTask } from "../api/use-bulk-update-task";
+import { useGetTasks } from "../api/use-get-tasks";
+import { useCreateTaskModal } from "../hooks/use-create-task-modal";
+import { useTaskFilters } from "../hooks/use-task-filters";
 
 type Props = {
     hideProjectFilter?: boolean;

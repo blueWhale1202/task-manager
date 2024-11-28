@@ -2,12 +2,13 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 
+import { Loader } from "lucide-react";
+import { EditTaskForm } from "./edit-task-form";
+
 import { useGetMembers } from "@/features/members/api/use-get-members";
 import { useGetProjects } from "@/features/projects/api/use-get-projects";
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
-import { Loader } from "lucide-react";
 import { useGetTask } from "../api/use-get-task";
-import { EditTaskForm } from "./edit-task-form";
 
 type Props = {
     onCancel: () => void;

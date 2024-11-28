@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
 import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
+
+import { format } from "date-fns";
 import { NAVIGATE } from "../types";
 
 type Props = {

@@ -1,15 +1,18 @@
 "use client";
 
-import { DotSeparator } from "@/components/dot-separator";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MemberAvatar } from "@/features/members/components/member-avatar";
-import { snakeCaseToTitleCase } from "@/lib/utils";
+
 import { TaskExtend } from "@/types";
 import { Pencil } from "lucide-react";
-import { useEditTaskModal } from "../hooks/use-edit-task-modal";
+
+import { DotSeparator } from "@/components/dot-separator";
+import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { OverviewProperty } from "./overview-property";
 import { TaskDate } from "./task-date";
+
+import { snakeCaseToTitleCase } from "@/lib/utils";
+import { useEditTaskModal } from "../hooks/use-edit-task-modal";
 
 type Props = {
     task: TaskExtend;

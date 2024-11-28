@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, useRef } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,7 +26,7 @@ import { DotSeparator } from "@/components/dot-separator";
 
 import { cn } from "@/lib/utils";
 import { ImageIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+
 import { useCreateWorkspace } from "../api/use-create-workspace";
 
 type FormValues = z.infer<typeof workspaceSchema>;

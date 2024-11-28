@@ -1,7 +1,9 @@
 "use client";
 
-import { TaskExtend, TaskStatus } from "@/types";
 import { useCallback, useEffect, useState } from "react";
+
+import { TaskExtend, TaskStatus } from "@/types";
+import { TaskState, UpdatePayload } from "../types";
 
 import {
     DragDropContext,
@@ -9,11 +11,12 @@ import {
     Droppable,
     DropResult,
 } from "@hello-pangea/dnd";
-import { BOARDS, MAX_POSITION, POSITION_STEP } from "../constants";
-import { getInitialTasks } from "../lib/utils";
-import { TaskState, UpdatePayload } from "../types";
+
 import { KanbanCard } from "./kanban-card";
 import { KanbanColumnHear } from "./kanban-column-header";
+
+import { BOARDS, MAX_POSITION, POSITION_STEP } from "../constants";
+import { getInitialTasks } from "../lib/utils";
 
 type Props = {
     data: TaskExtend[];

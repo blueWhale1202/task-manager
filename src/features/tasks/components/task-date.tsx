@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import { ClassName } from "@/types";
+
+import { cn } from "@/lib/utils";
 import { differenceInDays, format } from "date-fns";
 
 type Props = {

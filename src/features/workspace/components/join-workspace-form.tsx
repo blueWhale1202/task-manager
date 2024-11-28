@@ -1,6 +1,8 @@
 "use client";
 
-import { DotSeparator } from "@/components/dot-separator";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -9,8 +11,9 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+
+import { DotSeparator } from "@/components/dot-separator";
+
 import { useJoinWorkspace } from "../api/use-join-workspace";
 
 type Props = {

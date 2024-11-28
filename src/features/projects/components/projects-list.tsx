@@ -1,12 +1,16 @@
-import { DotSeparator } from "@/components/dot-separator";
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
+
 import { Project } from "@/types";
 import { Plus } from "lucide-react";
-import Link from "next/link";
-import { useCreateProjectModal } from "../hooks/use-create-project-modal";
+
+import { DotSeparator } from "@/components/dot-separator";
 import { ProjectAvatar } from "./project-avatar";
+
+import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
+import { useCreateProjectModal } from "../hooks/use-create-project-modal";
 
 type Props = {
     data: Project[];

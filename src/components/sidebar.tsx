@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { Projects } from "@/features/projects/components/projects";
-import { WorkspaceSwitcher } from "@/features/workspace/components/workspace-switcher";
 import { DotSeparator } from "./dot-separator";
 import { Navigation } from "./navigation";
+
+import { Projects } from "@/features/projects/components/projects";
+import { WorkspaceSwitcher } from "@/features/workspace/components/workspace-switcher";
 
 export const Sidebar = () => {
     return (

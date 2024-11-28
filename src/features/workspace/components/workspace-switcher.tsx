@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import {
     Select,
     SelectContent,
@@ -8,15 +10,15 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
+import { Loader } from "lucide-react";
 import { RiAddCircleFill } from "react-icons/ri";
 
 import { Workspace } from "@/types";
-import { Loader } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { WorkspaceAvatar } from "./workspace-avatar";
+
 import { useGetWorkspaces } from "../api/use-get-workspaces";
 import { useCreateWorkspaceModal } from "../hooks/use-create-workspace-modal";
 import { useWorkspaceId } from "../hooks/use-workspace-id";
-import { WorkspaceAvatar } from "./workspace-avatar";
 
 export const WorkspaceSwitcher = () => {
     const { data: workspaces, isLoading } = useGetWorkspaces();

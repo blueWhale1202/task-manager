@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Loader, LogOut, TriangleAlert } from "lucide-react";
+import { DotSeparator } from "./dot-separator";
 
 import { useCurrent } from "@/features/auth/api/use-current";
 import { useLogout } from "@/features/auth/api/use-logout";
-import { DotSeparator } from "./dot-separator";
 
 export const UserButton = () => {
     const { data: user, isPending, isSuccess } = useCurrent();

@@ -1,32 +1,20 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { MemberAvatar } from "@/features/members/components/member-avatar";
-import { ProjectAvatar } from "@/features/projects/components/project-avatar";
-import { snakeCaseToTitleCase } from "@/lib/utils";
 import { Project, Task, TaskStatus } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+
+import { MemberAvatar } from "@/features/members/components/member-avatar";
+import { ProjectAvatar } from "@/features/projects/components/project-avatar";
+
+import { snakeCaseToTitleCase } from "@/lib/utils";
 import { MoreVertical } from "lucide-react";
+
 import { ColumnHeader } from "./column-header";
 import { TaskActions } from "./task-action";
 import { TaskDate } from "./task-date";
-
-// export type Task = Models.Document & {
-//     workspaceId: string;
-//     projectId: string;
-//     name: string;
-//     status: TaskStatus;
-//     dueDate: number;
-//     assigneeId: string;
-//     description: string;
-//     position: number;
-// };
-
-// {
-//     accessorKey: "status",
-//     header: "Status",
-//   },
 
 export const columns: ColumnDef<Task>[] = [
     {

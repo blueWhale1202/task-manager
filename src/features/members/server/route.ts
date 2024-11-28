@@ -1,12 +1,15 @@
 import { DATABASE_ID, MEMBERS_ID } from "@/config";
+import { Member, MemberRole } from "@/types";
+
+import { zValidator } from "@hono/zod-validator";
+import { z } from "zod";
+
+import { Hono } from "hono";
+import { Query } from "node-appwrite";
+
 import { getMember } from "@/features/members/lib/utils";
 import { createAdminClient } from "@/lib/appwrite";
 import { sessionMiddleware } from "@/lib/session-middleware";
-import { Member, MemberRole } from "@/types";
-import { zValidator } from "@hono/zod-validator";
-import { Hono } from "hono";
-import { Query } from "node-appwrite";
-import { z } from "zod";
 
 export const members = new Hono()
     .get(

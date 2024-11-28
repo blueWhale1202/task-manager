@@ -1,6 +1,7 @@
 "use client";
 
-import { ResponsiveModal } from "@/components/responsive-modal";
+import { useState } from "react";
+
 import { Button, ButtonProps } from "@/components/ui/button";
 import {
     Card,
@@ -9,7 +10,8 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { useState } from "react";
+
+import { ResponsiveModal } from "@/components/responsive-modal";
 
 type State = {
     resolve: (value: boolean) => void;

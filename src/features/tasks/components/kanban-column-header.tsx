@@ -1,11 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { snakeCaseToTitleCase } from "@/lib/utils";
-import { TaskStatus } from "@/types";
-
 import { Plus } from "lucide-react";
+
+import { TaskStatus } from "@/types";
 import { STATUS_ICON_MAP } from "../constants";
+
+import { snakeCaseToTitleCase } from "@/lib/utils";
 import { useCreateTaskModal } from "../hooks/use-create-task-modal";
 
 type Props = {
