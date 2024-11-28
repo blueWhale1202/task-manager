@@ -5,13 +5,18 @@ import { DotSeparator } from "@/components/dot-separator";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
+import { TaskExtend } from "@/types";
 import { Loader, Plus } from "lucide-react";
 import { useQueryState } from "nuqs";
+import { useCallback } from "react";
+import { useBulkUpdateTask } from "../api/use-bulk-update-task";
 import { useGetTasks } from "../api/use-get-tasks";
 import { useCreateTaskModal } from "../hooks/use-create-task-modal";
 import { useTaskFilters } from "../hooks/use-task-filters";
+import { UpdatePayload } from "../types";
 import { columns } from "./columns";
 import { DataFilters } from "./data-filters";
+import { DataKanban } from "./data-kanban";
 
 export const TaskViewSwitcher = () => {
     const workspaceId = useWorkspaceId();
@@ -27,11 +32,23 @@ export const TaskViewSwitcher = () => {
         search,
     });
 
+    const { mutate: bulkUpdateTask } = useBulkUpdateTask();
+
     const { open } = useCreateTaskModal();
 
     const [view, setView] = useQueryState("task-view", {
         defaultValue: "table",
     });
+
+    const onKanbanChange = useCallback(
+        (tasks: UpdatePayload[]) => {
+            console.log("🚀 ~ TaskViewSwitcher ~ tasks:", tasks);
+            bulkUpdateTask({
+                json: { tasks },
+            });
+        },
+        [bulkUpdateTask],
+    );
 
     return (
         <Tabs
@@ -90,7 +107,12 @@ export const TaskViewSwitcher = () => {
                                 data={tasks?.documents || []}
                             />
                         </TabsContent>
-                        <TabsContent value="kanban">Kanban</TabsContent>
+                        <TabsContent value="kanban">
+                            <DataKanban
+                                data={(tasks?.documents as TaskExtend[]) || []}
+                                onChange={onKanbanChange}
+                            />
+                        </TabsContent>
                         <TabsContent value="calendar">Calendar</TabsContent>
                     </>
                 )}

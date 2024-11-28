@@ -50,3 +50,11 @@ export type Task = Models.Document & {
     description: string;
     position: number;
 };
+
+export type TaskExtend = Task & {
+    project: Project;
+    assignee: Member & {
+        name: string;
+        email: string;
+    };
+};

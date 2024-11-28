@@ -1,3 +1,5 @@
+import { TaskExtend, TaskStatus } from "@/types";
+
 export type ProjectOption = {
     id: string;
     name: string;
@@ -7,4 +9,14 @@ export type ProjectOption = {
 export type MemberOption = {
     id: string;
     name: string;
+};
+
+export type TaskState = {
+    [key in TaskStatus]: TaskExtend[];
+};
+
+export type UpdatePayload = {
+    $id: string;
+    status: TaskStatus;
+    position: number;
 };

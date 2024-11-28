@@ -8,6 +8,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { ID, Query } from "node-appwrite";
 import { z } from "zod";
+import { MAX_POSITION, POSITION_STEP } from "../constants";
 import { taskSchema } from "../schemas";
 
 export const tasks = new Hono()
@@ -51,8 +52,8 @@ export const tasks = new Hono()
 
         const newPosition =
             highestPositionTask.documents.length > 0
-                ? highestPositionTask.documents[0].position + 1000
-                : 1000;
+                ? highestPositionTask.documents[0].position + POSITION_STEP
+                : POSITION_STEP;
 
         const task = await databases.createDocument(
             DATABASE_ID,
@@ -331,4 +332,79 @@ export const tasks = new Hono()
                 assignee,
             },
         });
-    });
+    })
+    .post(
+        "/bulk-update",
+        sessionMiddleware,
+        zValidator(
+            "json",
+            z.object({
+                tasks: z.array(
+                    z.object({
+                        $id: z.string(),
+                        status: z.nativeEnum(TaskStatus),
+                        position: z
+                            .number()
+                            .int()
+                            .min(POSITION_STEP)
+                            .max(MAX_POSITION),
+                    }),
+                ),
+            }),
+        ),
+        async (c) => {
+            const databases = c.get("databases");
+            const user = c.get("user");
+
+            const { tasks } = c.req.valid("json");
+
+            const tasksToUpdate = await databases.listDocuments<Task>(
+                DATABASE_ID,
+                TASKS_ID,
+                [
+                    Query.contains(
+                        "$id",
+                        tasks.map((task) => task.$id),
+                    ),
+                ],
+            );
+
+            const workspaceIds = new Set(
+                tasksToUpdate.documents.map((t) => t.workspaceId),
+            );
+            if (workspaceIds.size !== 1) {
+                return c.json(
+                    { message: "Tasks must belong to the same workspace" },
+                    400,
+                );
+            }
+
+            const workspaceId = workspaceIds.values().next().value ?? "";
+
+            const member = await getMember({
+                databases,
+                userId: user.$id,
+                workspaceId,
+            });
+
+            if (!member) {
+                return c.json(
+                    { message: "You are not a member of this workspace" },
+                    403,
+                );
+            }
+
+            const updatedTasks = await Promise.all(
+                tasks.map(async (task) => {
+                    const { $id, status, position } = task;
+                    return databases.updateDocument<Task>(
+                        DATABASE_ID,
+                        TASKS_ID,
+                        $id,
+                        { status, position },
+                    );
+                }),
+            );
+            return c.json({ data: updatedTasks });
+        },
+    );
