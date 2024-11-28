@@ -36,17 +36,17 @@ export const MembersList = ({ data, total }: Props) => {
                     {data.map((member) => (
                         <li key={member.$id}>
                             <Card className="overflow-hidden rounded-lg shadow-none">
-                                <CardContent className="flex flex-col items-center gap-x-2 p-3">
+                                <CardContent className="flex flex-col items-center gap-y-2 p-3">
                                     <MemberAvatar
                                         name={member.name}
                                         className="size-12"
                                         fallbackClassName="text-lg"
                                     />
                                     <div className="flex flex-col items-center overflow-hidden">
-                                        <p className="truncate text-lg font-medium">
+                                        <p className="truncate text-sm font-medium">
                                             {member.name}
                                         </p>
-                                        <p className="line-clamp-1 text-sm text-muted-foreground">
+                                        <p className="line-clamp-1 text-xs text-muted-foreground">
                                             {member.email}
                                         </p>
                                     </div>

@@ -31,6 +31,7 @@ import { DotSeparator } from "@/components/dot-separator";
 import { FaGithub } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 
+import { signInWithGithub, signInWithGoogle } from "@/lib/oauth";
 import { useRegister } from "../api/use-register";
 
 type FormValues = z.infer<typeof registerSchema>;
@@ -147,11 +148,21 @@ export const SignUpCard = () => {
             </div>
 
             <CardContent className="flex flex-col gap-y-4 p-7">
-                <Button variant="secondary" size="lg" className="w-full">
+                <Button
+                    variant="secondary"
+                    size="lg"
+                    className="w-full"
+                    onClick={() => signInWithGoogle()}
+                >
                     <FcGoogle className="mr-2 !size-5" />
                     Continue with Google
                 </Button>
-                <Button variant="secondary" size="lg" className="w-full">
+                <Button
+                    variant="secondary"
+                    size="lg"
+                    className="w-full"
+                    onClick={() => signInWithGithub()}
+                >
                     <FaGithub className="mr-2 !size-5" /> Continue with Github
                 </Button>
             </CardContent>

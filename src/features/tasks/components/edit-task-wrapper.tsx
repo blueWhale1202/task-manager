@@ -22,7 +22,7 @@ export const EditTaskWrapper = ({ onCancel, id }: Props) => {
     const tasks = useGetTask(id);
 
     const isLoading =
-        projects.isPending || members.isPending || tasks.isPending;
+        projects.isLoading || members.isLoading || tasks.isLoading;
 
     if (isLoading) {
         return (

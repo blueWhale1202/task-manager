@@ -53,7 +53,8 @@ export const EditWorkspaceForm = ({ onCancel, initialData }: Props) => {
 
     useEffect(() => {
         form.setValue("name", initialData.name);
-    }, [form, initialData.name]);
+        form.setValue("image", initialData.imageUrl ?? "");
+    }, [form, initialData]);
 
     const { ConfirmDialog, confirm } = useConfirm({
         title: "Delete Workspace",

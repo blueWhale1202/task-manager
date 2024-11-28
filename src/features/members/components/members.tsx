@@ -19,12 +19,14 @@ import { useDeleteMember } from "../api/use-delete-member";
 import { useGetMembers } from "../api/use-get-members";
 import { useUpdateMember } from "../api/use-update-member";
 
+import { PageError } from "@/components/page-error";
+import { PageLoader } from "@/components/page-loader";
 import { MemberRole } from "@/types";
 import { MemberAvatar } from "./member-avatar";
 
 export const Members = () => {
     const workspaceId = useWorkspaceId();
-    const { data, isPending } = useGetMembers(workspaceId);
+    const { data, isLoading } = useGetMembers(workspaceId);
     const updateMember = useUpdateMember();
     const deleteMember = useDeleteMember();
 
@@ -33,11 +35,15 @@ export const Members = () => {
         message: "This member will be removed from the workspace.",
     });
 
-    if (isPending) {
-        return <p>Loading...</p>;
+    if (isLoading) {
+        return <PageLoader />;
     }
 
-    const isLoading = updateMember.isPending || deleteMember.isPending;
+    if (!data) {
+        return <PageError />;
+    }
+
+    const isPending = updateMember.isPending || deleteMember.isPending;
 
     const onUpdate = (memberId: string, role: MemberRole) => {
         updateMember.mutate({
@@ -80,9 +86,7 @@ export const Members = () => {
             <CardContent className="p-7">
                 {data?.documents.map((member, index) => (
                     <Fragment key={member.$id}>
-                        {index > 0 && (
-                            <Separator className="my-2.5 bg-neutral-300" />
-                        )}
+                        {index > 0 && <Separator className="my-2.5" />}
                         <div className="flex items-center gap-2">
                             <MemberAvatar
                                 name={member.name}
@@ -110,9 +114,9 @@ export const Members = () => {
                                         className="ml-auto"
                                         variant="secondary"
                                         size="icon"
-                                        disabled={isLoading}
+                                        disabled={isPending}
                                     >
-                                        {isLoading ? (
+                                        {isPending ? (
                                             <Loader className="animate-spin text-muted-foreground" />
                                         ) : (
                                             <MoreHorizontal className="text-muted-foreground" />

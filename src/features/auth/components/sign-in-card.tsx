@@ -26,6 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { DotSeparator } from "@/components/dot-separator";
+import { signInWithGithub, signInWithGoogle } from "@/lib/oauth";
 import { FaGithub } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { useLogin } from "../api/use-login";
@@ -116,11 +117,21 @@ export const SignInCard = () => {
             </div>
 
             <CardContent className="flex flex-col gap-y-4 p-7">
-                <Button variant="secondary" size="lg" className="w-full">
+                <Button
+                    variant="secondary"
+                    size="lg"
+                    className="w-full"
+                    onClick={() => signInWithGoogle()}
+                >
                     <FcGoogle className="mr-2 !size-5" />
                     Continue with Google
                 </Button>
-                <Button variant="secondary" size="lg" className="w-full">
+                <Button
+                    variant="secondary"
+                    size="lg"
+                    className="w-full"
+                    onClick={() => signInWithGithub()}
+                >
                     <FaGithub className="mr-2 !size-5" /> Continue with Github
                 </Button>
             </CardContent>

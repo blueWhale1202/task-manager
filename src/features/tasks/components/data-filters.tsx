@@ -30,7 +30,7 @@ export const DataFilters = ({ hideProjectFilter }: Props) => {
     const [{ assigneeId, projectId, status, dueDate, search }, setFilters] =
         useTaskFilters();
 
-    const isLoading = projects.isPending || members.isPending;
+    const isLoading = projects.isLoading || members.isLoading;
 
     if (isLoading) {
         return (

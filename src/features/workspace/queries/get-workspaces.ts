@@ -11,10 +11,11 @@ export const getWorkspaces = async () => {
     ]);
 
     if (members.total === 0) {
-        throw new Error("You are not a member of any workspace");
+        return { total: 0, documents: [] };
     }
 
-    const workspaceIds = members.documents.map((member) => member.workspaceId);
+    const workspaceIds =
+        members.documents.map((member) => member.workspaceId) ?? [];
 
     const workspaces = await databases.listDocuments(
         DATABASE_ID,

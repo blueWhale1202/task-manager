@@ -18,7 +18,7 @@ export const CreateTaskWrapper = ({ onCancel }: Props) => {
     const projects = useGetProjects(workspaceId);
     const members = useGetMembers(workspaceId);
 
-    const isLoading = projects.isPending || members.isPending;
+    const isLoading = projects.isLoading || members.isLoading;
 
     if (isLoading) {
         return (

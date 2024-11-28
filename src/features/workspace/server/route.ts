@@ -33,7 +33,7 @@ export const workspace = new Hono()
             (member) => member.workspaceId,
         );
 
-        const workspaces = await databases.listDocuments(
+        const workspaces = await databases.listDocuments<Workspace>(
             DATABASE_ID,
             WORKSPACE_ID,
             [

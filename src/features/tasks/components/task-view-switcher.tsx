@@ -3,6 +3,7 @@
 import { DotSeparator } from "@/components/dot-separator";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import { DataTable } from "@/features/tasks/components/data-table";
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
 import { Loader, Plus } from "lucide-react";
@@ -24,12 +25,14 @@ type Props = {
 
 export const TaskViewSwitcher = ({ hideProjectFilter }: Props) => {
     const workspaceId = useWorkspaceId();
+    const paramProjectId = useProjectId();
+
     const [{ assigneeId, projectId, status, dueDate, search }, setFilters] =
         useTaskFilters();
 
     const { data: tasks, isPending } = useGetTasks({
         workspaceId,
-        projectId,
+        projectId: paramProjectId || projectId,
         assigneeId,
         status,
         dueDate,

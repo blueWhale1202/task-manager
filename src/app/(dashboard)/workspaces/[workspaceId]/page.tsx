@@ -7,17 +7,12 @@ import { useGetMembers } from "@/features/members/api/use-get-members";
 import { MembersList } from "@/features/members/components/member-list";
 import { useGetProjects } from "@/features/projects/api/use-get-projects";
 import { ProjectList } from "@/features/projects/components/projects-list";
-import { useCreateProjectModal } from "@/features/projects/hooks/use-create-project-modal";
 import { useGetTasks } from "@/features/tasks/api/use-get-tasks";
 import { TasksList } from "@/features/tasks/components/tasks-list";
-import { useCreateTaskModal } from "@/features/tasks/hooks/use-create-task-modal";
 import { useGetWorkspaceAnalytics } from "@/features/workspace/api/use-get-workspace-analytics";
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
 
 export default function WorkspacePage() {
-    const { open: createProject } = useCreateProjectModal();
-    const { open: createTask } = useCreateTaskModal();
-
     const workspaceId = useWorkspaceId();
 
     const analytics = useGetWorkspaceAnalytics(workspaceId);
