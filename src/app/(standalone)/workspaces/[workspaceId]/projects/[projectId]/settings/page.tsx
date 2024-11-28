@@ -1,22 +1,23 @@
+"use client";
+
+import { PageError } from "@/components/page-error";
+import { PageLoader } from "@/components/page-loader";
+import { useGetProject } from "@/features/projects/api/use-get-project";
 import { EditProjectForm } from "@/features/projects/components/edit-project-form";
-import { getProject } from "@/features/projects/queries/get-project";
-import { redirect } from "next/navigation";
+import { useProjectId } from "@/features/projects/hooks/use-project-id";
 
-type Props = {
-    params: {
-        workspaceId: string;
-        projectId: string;
-    };
-};
+export default function ProjectSettingsPage() {
+    const projectId = useProjectId();
+    const { data: project, isLoading } = useGetProject(projectId);
 
-export default async function ProjectSettingsPage({ params }: Props) {
-    const { projectId } = params;
-
-    const project = await getProject(projectId);
+    if (isLoading) {
+        return <PageLoader />;
+    }
 
     if (!project) {
-        redirect(`/`);
+        return <PageError message="Project not found" />;
     }
+
     return (
         <div className="w-full lg:max-w-xl">
             <EditProjectForm initialData={project} />

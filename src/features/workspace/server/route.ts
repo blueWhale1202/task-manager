@@ -42,6 +42,59 @@ export const workspace = new Hono()
 
         return c.json({ data: workspaces });
     })
+    .get("/:workspaceId", sessionMiddleware, async (c) => {
+        const databases = c.get("databases");
+        const user = c.get("user");
+
+        const { workspaceId } = c.req.param();
+
+        const member = await getMember({
+            databases,
+            userId: user.$id,
+            workspaceId,
+        });
+
+        if (!member) {
+            return c.json(
+                { message: "You are not a member of this workspace" },
+                403,
+            );
+        }
+
+        const workspace = await databases.getDocument<Workspace>(
+            DATABASE_ID,
+            WORKSPACE_ID,
+            workspaceId,
+        );
+
+        if (!workspace) {
+            return c.json({ message: "Workspace not found" }, 404);
+        }
+
+        return c.json({ data: workspace });
+    })
+    .get("/:workspaceId/info", sessionMiddleware, async (c) => {
+        const databases = c.get("databases");
+
+        const { workspaceId } = c.req.param();
+
+        const workspace = await databases.getDocument<Workspace>(
+            DATABASE_ID,
+            WORKSPACE_ID,
+            workspaceId,
+        );
+
+        if (!workspace) {
+            return c.json({ message: "Workspace not found" }, 404);
+        }
+
+        return c.json({
+            data: {
+                $id: workspace.$id,
+                name: workspace.name,
+            },
+        });
+    })
     .post(
         "/",
         zValidator("form", workspaceSchema),

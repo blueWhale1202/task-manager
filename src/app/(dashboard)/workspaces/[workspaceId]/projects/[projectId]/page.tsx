@@ -1,23 +1,26 @@
+"use client";
+
+import { PageError } from "@/components/page-error";
+import { PageLoader } from "@/components/page-loader";
 import { Button } from "@/components/ui/button";
+import { useGetProject } from "@/features/projects/api/use-get-project";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
-import { getProject } from "@/features/projects/queries/get-project";
+import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import { TaskViewSwitcher } from "@/features/tasks/components/task-view-switcher";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
 
-type Props = {
-    params: {
-        workspaceId: string;
-        projectId: string;
-    };
-};
-export default async function ProjectPage({ params }: Props) {
-    const { workspaceId, projectId } = params;
+export default function ProjectPage() {
+    const projectId = useProjectId();
 
-    const project = await getProject(projectId);
+    const { data: project, isLoading } = useGetProject(projectId);
+
+    if (isLoading) {
+        return <PageLoader />;
+    }
 
     if (!project) {
-        throw new Error("Project not found");
+        return <PageError message="Project not found" />;
     }
 
     return (

@@ -3,11 +3,11 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 
 type Props = {
-    message: string;
+    message?: string;
 };
 export const PageError = ({ message = "Something went wrong" }: Props) => {
     return (
-        <div className="flex h-full flex-col items-center justify-center gap-y-2">
+        <div className="flex h-screen flex-col items-center justify-center gap-y-2">
             <TriangleAlert className="size-6 text-destructive" />
             <p className="text-sm text-destructive">{message}</p>
             <Button variant="secondary" size="sm" asChild>

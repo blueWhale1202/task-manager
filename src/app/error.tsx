@@ -1,7 +1,7 @@
 "use client";
 
-import { ErrorUI } from "@/components/error-ui";
+import { PageError } from "@/components/page-error";
 
 export default function ErrorPage() {
-    return <ErrorUI />;
+    return <PageError />;
 }

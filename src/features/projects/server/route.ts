@@ -44,6 +44,33 @@ export const projects = new Hono()
             return c.json({ data: projects });
         },
     )
+    .get("/:projectId", sessionMiddleware, async (c) => {
+        const user = c.get("user");
+        const databases = c.get("databases");
+
+        const { projectId } = c.req.param();
+
+        const project = await databases.getDocument<Project>(
+            DATABASE_ID,
+            PROJECTS_ID,
+            projectId,
+        );
+
+        const member = await getMember({
+            databases,
+            userId: user.$id,
+            workspaceId: project.workspaceId,
+        });
+
+        if (!member) {
+            return c.json(
+                { message: "You are not a member of this workspace" },
+                403,
+            );
+        }
+
+        return c.json({ data: project });
+    })
     .post(
         "/",
         sessionMiddleware,

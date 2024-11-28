@@ -109,7 +109,6 @@ export const EditProjectForm = ({ onCancel, initialData }: Props) => {
                     router.push(
                         `/workspaces/${initialData.workspaceId}/projects/${data.$id}`,
                     );
-                    router.refresh();
                 },
             },
         );
@@ -124,7 +123,6 @@ export const EditProjectForm = ({ onCancel, initialData }: Props) => {
             {
                 onSuccess: () => {
                     router.push("/");
-                    router.refresh();
                 },
             },
         );

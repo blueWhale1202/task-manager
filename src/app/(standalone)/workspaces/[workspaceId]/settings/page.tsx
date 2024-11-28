@@ -1,20 +1,22 @@
+"use client";
+
+import { PageError } from "@/components/page-error";
+import { PageLoader } from "@/components/page-loader";
+import { useGetWorkspace } from "@/features/workspace/api/use-get-workspace";
 import { EditWorkspaceForm } from "@/features/workspace/components/edit-workspace-form";
-import { getWorkspace } from "@/features/workspace/queries/get-workspace";
-import { redirect } from "next/navigation";
+import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
 
-type Props = {
-    params: {
-        workspaceId: string;
-    };
-};
+export default function WorkspaceSettingPage() {
+    const workspaceId = useWorkspaceId();
 
-export default async function WorkspaceSettingPage({ params }: Props) {
-    const { workspaceId } = params;
+    const { data: initialData, isLoading } = useGetWorkspace(workspaceId);
 
-    const initialData = await getWorkspace(workspaceId);
+    if (isLoading) {
+        return <PageLoader />;
+    }
 
     if (!initialData) {
-        redirect(`/`);
+        return <PageError message="Workspace not found" />;
     }
 
     return (

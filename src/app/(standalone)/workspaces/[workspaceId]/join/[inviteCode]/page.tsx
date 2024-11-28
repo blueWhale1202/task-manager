@@ -1,27 +1,34 @@
+"use client";
+
+import { PageError } from "@/components/page-error";
+import { PageLoader } from "@/components/page-loader";
+import { useGetWorkspaceInfo } from "@/features/workspace/api/use-get-workspace-info";
 import { JoinWorkspaceForm } from "@/features/workspace/components/join-workspace-form";
-import { getWorkspaceInfo } from "@/features/workspace/queries/get-workspace-info";
-import { redirect } from "next/navigation";
+import { useInviteCode } from "@/features/workspace/hooks/use-invite-code";
+import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
 
-type Props = {
-    params: {
-        workspaceId: string;
-        inviteCode: string;
-    };
-};
+export default function InvitePage() {
+    const workspaceId = useWorkspaceId();
+    const inviteCode = useInviteCode();
 
-export default async function InvitePage({ params }: Props) {
-    const { workspaceId, inviteCode } = params;
+    const { data, isLoading } = useGetWorkspaceInfo(workspaceId);
 
-    const info = await getWorkspaceInfo(workspaceId);
+    if (isLoading) {
+        return <PageLoader />;
+    }
 
-    if (!info) {
-        redirect("/");
+    if (!data) {
+        return <PageError message="Workspace not found" />;
     }
 
     return (
         <div className="w-full lg:max-w-xl">
             <JoinWorkspaceForm
-                initialValues={{ name: info.name, workspaceId, inviteCode }}
+                initialValues={{
+                    workspaceId,
+                    inviteCode,
+                    name: data.name,
+                }}
             />
         </div>
     );

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ChangeEvent, useRef } from "react";
+import { ChangeEvent, useEffect, useRef } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -50,6 +50,10 @@ export const EditWorkspaceForm = ({ onCancel, initialData }: Props) => {
             image: initialData.imageUrl ?? "",
         },
     });
+
+    useEffect(() => {
+        form.setValue("name", initialData.name);
+    }, [form, initialData.name]);
 
     const { ConfirmDialog, confirm } = useConfirm({
         title: "Delete Workspace",
@@ -115,10 +119,8 @@ export const EditWorkspaceForm = ({ onCancel, initialData }: Props) => {
         mutate(
             { form: finalValues, param: { workspaceId: initialData.$id } },
             {
-                onSuccess: ({ data }) => {
+                onSuccess: () => {
                     form.reset();
-                    router.push(`/workspaces/${data.$id}`);
-                    router.refresh();
                 },
             },
         );
@@ -133,7 +135,6 @@ export const EditWorkspaceForm = ({ onCancel, initialData }: Props) => {
             {
                 onSuccess: () => {
                     router.push("/");
-                    router.refresh();
                 },
             },
         );
@@ -158,7 +159,6 @@ export const EditWorkspaceForm = ({ onCancel, initialData }: Props) => {
             {
                 onSuccess: () => {
                     toast.success("Workspace invite code reset successfully");
-                    router.refresh();
                 },
             },
         );
