@@ -3,12 +3,16 @@ import { cn } from "@/lib/utils";
 import { ClassName } from "@/types";
 
 type Props = {
-    name: string;
+    name?: string;
     className?: ClassName;
     fallbackClassName?: ClassName;
 };
 
-export const MemberAvatar = ({ name, className, fallbackClassName }: Props) => {
+export const MemberAvatar = ({
+    name = "Anonymous",
+    className,
+    fallbackClassName,
+}: Props) => {
     return (
         <Avatar
             className={cn(

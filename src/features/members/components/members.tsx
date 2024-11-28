@@ -22,7 +22,7 @@ import { useUpdateMember } from "../api/use-update-member";
 import { MemberRole } from "@/types";
 import { MemberAvatar } from "./member-avatar";
 
-export const MembersList = () => {
+export const Members = () => {
     const workspaceId = useWorkspaceId();
     const { data, isPending } = useGetMembers(workspaceId);
     const updateMember = useUpdateMember();

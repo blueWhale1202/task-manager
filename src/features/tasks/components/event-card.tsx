@@ -9,8 +9,8 @@ import { STATUS_COLOR_MAP } from "../constants";
 type Props = {
     id: string;
     title: string;
-    assignee: TaskExtend["assignee"];
-    project: Project;
+    assignee?: TaskExtend["assignee"];
+    project?: Project;
     status: TaskStatus;
 };
 

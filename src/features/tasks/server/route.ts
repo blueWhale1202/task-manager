@@ -193,6 +193,60 @@ export const tasks = new Hono()
             });
         },
     )
+    .get("/:taskId", sessionMiddleware, async (c) => {
+        const currentUser = c.get("user");
+        const databases = c.get("databases");
+
+        const { users } = await createAdminClient();
+
+        const { taskId } = c.req.param();
+
+        const task = await databases.getDocument<Task>(
+            DATABASE_ID,
+            TASKS_ID,
+            taskId,
+        );
+
+        const currentMember = await getMember({
+            databases,
+            userId: currentUser.$id,
+            workspaceId: task.workspaceId,
+        });
+
+        if (!currentMember) {
+            return c.json(
+                { message: "You are not a member of this workspace" },
+                403,
+            );
+        }
+
+        const project = await databases.getDocument<Project>(
+            DATABASE_ID,
+            PROJECTS_ID,
+            task.projectId,
+        );
+
+        const member = await databases.getDocument<Member>(
+            DATABASE_ID,
+            MEMBERS_ID,
+            task.assigneeId,
+        );
+
+        const user = await users.get(member.userId);
+        const assignee = {
+            ...member,
+            name: user.name,
+            email: user.email,
+        };
+
+        return c.json({
+            data: {
+                ...task,
+                project,
+                assignee,
+            },
+        });
+    })
     .delete(
         "/:taskId",
         sessionMiddleware,
@@ -279,60 +333,6 @@ export const tasks = new Hono()
             return c.json({ data: task });
         },
     )
-    .get("/:taskId", sessionMiddleware, async (c) => {
-        const currentUser = c.get("user");
-        const databases = c.get("databases");
-
-        const { users } = await createAdminClient();
-
-        const { taskId } = c.req.param();
-
-        const task = await databases.getDocument<Task>(
-            DATABASE_ID,
-            TASKS_ID,
-            taskId,
-        );
-
-        const currentMember = await getMember({
-            databases,
-            userId: currentUser.$id,
-            workspaceId: task.workspaceId,
-        });
-
-        if (!currentMember) {
-            return c.json(
-                { message: "You are not a member of this workspace" },
-                403,
-            );
-        }
-
-        const project = await databases.getDocument<Project>(
-            DATABASE_ID,
-            PROJECTS_ID,
-            task.projectId,
-        );
-
-        const member = await databases.getDocument<Member>(
-            DATABASE_ID,
-            MEMBERS_ID,
-            task.assigneeId,
-        );
-
-        const user = await users.get(member.userId);
-        const assignee = {
-            ...member,
-            name: user.name,
-            email: user.email,
-        };
-
-        return c.json({
-            data: {
-                ...task,
-                project,
-                assignee,
-            },
-        });
-    })
     .post(
         "/bulk-update",
         sessionMiddleware,

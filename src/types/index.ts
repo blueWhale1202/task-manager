@@ -52,8 +52,8 @@ export type Task = Models.Document & {
 };
 
 export type TaskExtend = Task & {
-    project: Project;
-    assignee: Member & {
+    project?: Project;
+    assignee?: Member & {
         name: string;
         email: string;
     };

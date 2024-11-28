@@ -1,9 +1,9 @@
-import { MembersList } from "@/features/members/components/members-list";
+import { Members } from "@/features/members/components/members";
 
 export default function MembersPage() {
     return (
         <div className="w-full lg:max-w-xl">
-            <MembersList />
+            <Members />
         </div>
     );
 }

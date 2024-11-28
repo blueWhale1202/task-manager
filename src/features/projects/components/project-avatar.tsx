@@ -5,14 +5,14 @@ import Image from "next/image";
 
 type Props = {
     image?: string;
-    name: string;
+    name?: string;
     className?: ClassName;
     fallbackClassName?: ClassName;
 };
 
 export const ProjectAvatar = ({
     image,
-    name,
+    name = "Unnamed Project",
     className,
     fallbackClassName,
 }: Props) => {

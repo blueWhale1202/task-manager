@@ -1,68 +1,59 @@
-"use client";
-
+import { DotSeparator } from "@/components/dot-separator";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
-import { cn } from "@/lib/utils";
+import { Project } from "@/types";
+import { Plus } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { RiAddCircleFill } from "react-icons/ri";
-import { useGetProjects } from "../api/use-get-projects";
 import { useCreateProjectModal } from "../hooks/use-create-project-modal";
-import { useProjectId } from "../hooks/use-project-id";
 import { ProjectAvatar } from "./project-avatar";
 
-export const ProjectsList = () => {
-    const workspaceId = useWorkspaceId();
-    const projectId = useProjectId();
+type Props = {
+    data: Project[];
+    total: number;
+};
 
+export const ProjectList = ({ data, total }: Props) => {
+    const workspaceId = useWorkspaceId();
     const { open } = useCreateProjectModal();
 
-    const { data, isPending } = useGetProjects(workspaceId);
-
-    const pathname = usePathname();
-
-    if (isPending) {
-        return <p>Loading...</p>;
-    }
-
-    if (!data) {
-        return <p>No projects found</p>;
-    }
-
     return (
-        <div className="flex flex-col gap-y-2">
-            <div className="flex items-center justify-between">
-                <p className="text-xs font-medium uppercase text-neutral-500">
-                    Projects
-                </p>
-                <RiAddCircleFill
-                    onClick={open}
-                    className="size-5 cursor-pointer text-neutral-500 transition hover:opacity-75"
-                />
+        <div className="col-span-1 flex flex-col gap-y-4">
+            <div className="rounded-lg border bg-white p-4">
+                <div className="flex items-center justify-between">
+                    <p className="text-lg font-semibold">Projects ({total})</p>
+                    <Button variant="secondary" size="icon" onClick={open}>
+                        <Plus className="text-neutral-400" />
+                    </Button>
+                </div>
+                <DotSeparator className="my-4" />
+                <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                    {data.map((project) => (
+                        <li key={project.$id}>
+                            <Link
+                                href={`/workspaces/${workspaceId}/projects/${project.$id}`}
+                            >
+                                <Card className="rounded-lg shadow-none transition hover:opacity-75">
+                                    <CardContent className="flex items-center gap-x-2.5 p-4">
+                                        <ProjectAvatar
+                                            name={project.name}
+                                            image={project.imageUrl}
+                                            className="size-12"
+                                            fallbackClassName="text-lg"
+                                        />
+                                        <p className="truncate text-lg font-medium">
+                                            {project.name}
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            </Link>
+                        </li>
+                    ))}
+                    <li className="hidden text-center text-sm text-muted-foreground first-of-type:block">
+                        No projects found
+                    </li>
+                </ul>
             </div>
-
-            {data.documents.map((project) => {
-                const href = `/workspaces/${workspaceId}/projects/${project.$id}`;
-                const isActive = pathname === href;
-
-                return (
-                    <Link href={href} key={project.$id}>
-                        <div
-                            className={cn(
-                                "flex cursor-pointer items-center gap-2.5 rounded-md p-2.5 text-neutral-500 transition hover:opacity-75",
-                                isActive &&
-                                    "bg-white text-primary shadow-sm hover:opacity-100",
-                            )}
-                        >
-                            <ProjectAvatar
-                                image={project.imageUrl}
-                                name={project.name}
-                                fallbackClassName="text-sm"
-                            />
-                            <span className="truncate">{project.name}</span>
-                        </div>
-                    </Link>
-                );
-            })}
         </div>
     );
 };

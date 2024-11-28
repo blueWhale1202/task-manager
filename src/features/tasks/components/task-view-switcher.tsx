@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "@/features/tasks/components/data-table";
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
-import { TaskExtend } from "@/types";
 import { Loader, Plus } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useCallback } from "react";
@@ -114,7 +113,7 @@ export const TaskViewSwitcher = ({ hideProjectFilter }: Props) => {
                         </TabsContent>
                         <TabsContent value="kanban" className="mt-0">
                             <DataKanban
-                                data={(tasks?.documents as TaskExtend[]) || []}
+                                data={tasks?.documents || []}
                                 onChange={onKanbanChange}
                             />
                         </TabsContent>
@@ -122,9 +121,7 @@ export const TaskViewSwitcher = ({ hideProjectFilter }: Props) => {
                             value="calendar"
                             className="mt-0 h-full pb-4"
                         >
-                            <DataCalendar
-                                data={(tasks?.documents as TaskExtend[]) || []}
-                            />
+                            <DataCalendar data={tasks?.documents || []} />
                         </TabsContent>
                     </>
                 )}
