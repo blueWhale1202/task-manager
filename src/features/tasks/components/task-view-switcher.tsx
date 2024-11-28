@@ -1,9 +1,9 @@
 "use client";
 
-import { DataTable } from "@/components/data-table";
 import { DotSeparator } from "@/components/dot-separator";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DataTable } from "@/features/tasks/components/data-table";
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
 import { TaskExtend } from "@/types";
 import { Loader, Plus } from "lucide-react";
@@ -15,6 +15,7 @@ import { useCreateTaskModal } from "../hooks/use-create-task-modal";
 import { useTaskFilters } from "../hooks/use-task-filters";
 import { UpdatePayload } from "../types";
 import { columns } from "./columns";
+import { DataCalendar } from "./data-calendar";
 import { DataFilters } from "./data-filters";
 import { DataKanban } from "./data-kanban";
 
@@ -101,19 +102,26 @@ export const TaskViewSwitcher = () => {
                     </div>
                 ) : (
                     <>
-                        <TabsContent value="table">
+                        <TabsContent value="table" className="mt-0">
                             <DataTable
                                 columns={columns}
                                 data={tasks?.documents || []}
                             />
                         </TabsContent>
-                        <TabsContent value="kanban">
+                        <TabsContent value="kanban" className="mt-0">
                             <DataKanban
                                 data={(tasks?.documents as TaskExtend[]) || []}
                                 onChange={onKanbanChange}
                             />
                         </TabsContent>
-                        <TabsContent value="calendar">Calendar</TabsContent>
+                        <TabsContent
+                            value="calendar"
+                            className="mt-0 h-full pb-4"
+                        >
+                            <DataCalendar
+                                data={(tasks?.documents as TaskExtend[]) || []}
+                            />
+                        </TabsContent>
                     </>
                 )}
             </div>

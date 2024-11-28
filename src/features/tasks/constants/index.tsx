@@ -19,6 +19,14 @@ export const STATUS_ICON_MAP: Record<TaskStatus, React.ReactNode> = {
     [TaskStatus.DONE]: <CircleCheck className="size-[18px] text-emerald-400" />,
 };
 
+export const STATUS_COLOR_MAP: Record<TaskStatus, string> = {
+    [TaskStatus.BACKLOG]: "border-l-gray-500",
+    [TaskStatus.TODO]: "border-l-red-500",
+    [TaskStatus.IN_PROGRESS]: "border-l-yellow-500",
+    [TaskStatus.IN_REVIEW]: "border-l-blue-500",
+    [TaskStatus.DONE]: "border-l-emerald-500",
+};
+
 export const BOARDS: TaskStatus[] = [
     TaskStatus.BACKLOG,
     TaskStatus.TODO,

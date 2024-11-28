@@ -20,3 +20,9 @@ export type UpdatePayload = {
     status: TaskStatus;
     position: number;
 };
+
+export enum NAVIGATE {
+    PREVIOUS = "PREVIOUS",
+    NEXT = "NEXT",
+    TODAY = "TODAY",
+}
