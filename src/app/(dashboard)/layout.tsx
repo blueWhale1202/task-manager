@@ -3,6 +3,7 @@ import { Sidebar } from "@/components/sidebar";
 import { getCurrent } from "@/features/auth/queries/get-current";
 import { CreateProjectModal } from "@/features/projects/components/create-project-modal";
 import { CreateTaskModal } from "@/features/tasks/components/create-task-modal";
+import { EditTaskModal } from "@/features/tasks/components/edit-task-modal";
 import { CreateWorkspaceModal } from "@/features/workspace/components/create-workspace-modal";
 import { redirect } from "next/navigation";
 
@@ -21,6 +22,7 @@ export default async function DashboardLayout({ children }: Props) {
             <CreateWorkspaceModal />
             <CreateProjectModal />
             <CreateTaskModal />
+            <EditTaskModal />
             <div className="flex size-full">
                 <div className="fixed left-0 top-0 hidden h-full overflow-y-auto lg:block lg:w-[264px]">
                     <Sidebar />

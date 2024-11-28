@@ -1,6 +1,7 @@
 import { DATABASE_ID, MEMBERS_ID, PROJECTS_ID, TASKS_ID } from "@/config";
 import { getMember } from "@/features/members/lib/utils";
 import { getMembersInfo } from "@/features/members/queries/get-members-info";
+import { createAdminClient } from "@/lib/appwrite";
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { Member, Project, Task, TaskStatus } from "@/types";
 import { zValidator } from "@hono/zod-validator";
@@ -113,7 +114,7 @@ export const tasks = new Hono()
 
             const query = [
                 Query.equal("workspaceId", workspaceId),
-                Query.orderDesc("$createdAt"),
+                Query.orderDesc("$updatedAt"),
             ];
 
             if (projectId) {
@@ -190,4 +191,144 @@ export const tasks = new Hono()
                 },
             });
         },
-    );
+    )
+    .delete(
+        "/:taskId",
+        sessionMiddleware,
+        zValidator("param", z.object({ taskId: z.string() })),
+        async (c) => {
+            const user = c.get("user");
+            const databases = c.get("databases");
+
+            const { taskId } = c.req.valid("param");
+
+            const task = await databases.getDocument<Task>(
+                DATABASE_ID,
+                TASKS_ID,
+                taskId,
+            );
+
+            const member = await getMember({
+                databases,
+                userId: user.$id,
+                workspaceId: task.workspaceId,
+            });
+
+            if (!member) {
+                return c.json(
+                    { message: "You are not a member of this workspace" },
+                    403,
+                );
+            }
+
+            await databases.deleteDocument(DATABASE_ID, TASKS_ID, taskId);
+            return c.json({ data: { $id: task.$id } });
+        },
+    )
+    .patch(
+        "/:taskId",
+        sessionMiddleware,
+        zValidator("json", taskSchema.omit({ workspaceId: true })),
+        async (c) => {
+            const user = c.get("user");
+            const databases = c.get("databases");
+
+            const { taskId } = c.req.param();
+            const {
+                name,
+                description,
+                projectId,
+                dueDate,
+                assigneeId,
+                status,
+            } = c.req.valid("json");
+
+            const existingTask = await databases.getDocument<Task>(
+                DATABASE_ID,
+                TASKS_ID,
+                taskId,
+            );
+            const member = await getMember({
+                databases,
+                userId: user.$id,
+                workspaceId: existingTask.workspaceId,
+            });
+
+            if (!member) {
+                return c.json(
+                    { message: "You are not a member of this workspace" },
+                    403,
+                );
+            }
+
+            const task = await databases.updateDocument<Task>(
+                DATABASE_ID,
+                TASKS_ID,
+                taskId,
+                {
+                    name,
+                    description,
+                    projectId,
+                    dueDate,
+                    assigneeId,
+                    status,
+                },
+            );
+
+            return c.json({ data: task });
+        },
+    )
+    .get("/:taskId", sessionMiddleware, async (c) => {
+        const currentUser = c.get("user");
+        const databases = c.get("databases");
+
+        const { users } = await createAdminClient();
+
+        const { taskId } = c.req.param();
+
+        const task = await databases.getDocument<Task>(
+            DATABASE_ID,
+            TASKS_ID,
+            taskId,
+        );
+
+        const currentMember = await getMember({
+            databases,
+            userId: currentUser.$id,
+            workspaceId: task.workspaceId,
+        });
+
+        if (!currentMember) {
+            return c.json(
+                { message: "You are not a member of this workspace" },
+                403,
+            );
+        }
+
+        const project = await databases.getDocument<Project>(
+            DATABASE_ID,
+            PROJECTS_ID,
+            task.projectId,
+        );
+
+        const member = await databases.getDocument<Member>(
+            DATABASE_ID,
+            MEMBERS_ID,
+            task.assigneeId,
+        );
+
+        const user = await users.get(member.userId);
+        const assignee = {
+            ...member,
+            name: user.name,
+            email: user.email,
+        };
+
+        return c.json({
+            data: {
+                ...task,
+                project,
+                assignee,
+            },
+        });
+    });
