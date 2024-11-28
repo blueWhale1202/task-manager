@@ -12,6 +12,7 @@ import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { useGetProjects } from "@/features/projects/api/use-get-projects";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
+import { snakeCaseToTitleCase } from "@/lib/utils";
 import { TaskStatus } from "@/types";
 import { Folder, ListCheck, Loader, User2 } from "lucide-react";
 import { useTaskFilters } from "../hooks/use-task-filters";
@@ -72,15 +73,11 @@ export const DataFilters = ({ hideProjectFilter }: Props) => {
                 <SelectContent>
                     <SelectItem value="all">All statuses</SelectItem>
                     <SelectSeparator />
-                    <SelectItem value={TaskStatus.BACKLOG}>Backlog</SelectItem>
-                    <SelectItem value={TaskStatus.TODO}>Todo</SelectItem>
-                    <SelectItem value={TaskStatus.IN_PROGRESS}>
-                        In progress
-                    </SelectItem>
-                    <SelectItem value={TaskStatus.IN_REVIEW}>
-                        In review
-                    </SelectItem>
-                    <SelectItem value={TaskStatus.DONE}>Done</SelectItem>
+                    {Object.values(TaskStatus).map((status) => (
+                        <SelectItem key={status} value={status}>
+                            {snakeCaseToTitleCase(status)}
+                        </SelectItem>
+                    ))}
                 </SelectContent>
             </Select>
 
@@ -114,35 +111,37 @@ export const DataFilters = ({ hideProjectFilter }: Props) => {
                 </SelectContent>
             </Select>
 
-            <Select
-                value={projectId ?? undefined}
-                onValueChange={(value: string) =>
-                    onValueChange("projectId", value)
-                }
-            >
-                <SelectTrigger className="h-8 w-full lg:w-auto">
-                    <div className="flex items-center pr-2">
-                        <Folder className="mr-2 size-4" />
-                        <SelectValue placeholder="All projects" />
-                    </div>
-                </SelectTrigger>
+            {!hideProjectFilter && (
+                <Select
+                    value={projectId ?? undefined}
+                    onValueChange={(value: string) =>
+                        onValueChange("projectId", value)
+                    }
+                >
+                    <SelectTrigger className="h-8 w-full lg:w-auto">
+                        <div className="flex items-center pr-2">
+                            <Folder className="mr-2 size-4" />
+                            <SelectValue placeholder="All projects" />
+                        </div>
+                    </SelectTrigger>
 
-                <SelectContent>
-                    <SelectItem value="all">All projects</SelectItem>
-                    <SelectSeparator />
-                    {projectOptions?.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                            <div className="mr-2 flex items-center gap-x-2">
-                                <ProjectAvatar
-                                    name={option.label}
-                                    image={option.imageUrl}
-                                />
-                                <span>{option.label}</span>
-                            </div>
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
+                    <SelectContent>
+                        <SelectItem value="all">All projects</SelectItem>
+                        <SelectSeparator />
+                        {projectOptions?.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                                <div className="mr-2 flex items-center gap-x-2">
+                                    <ProjectAvatar
+                                        name={option.label}
+                                        image={option.imageUrl}
+                                    />
+                                    <span>{option.label}</span>
+                                </div>
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            )}
 
             <DatePicker
                 placeholder="Due date"

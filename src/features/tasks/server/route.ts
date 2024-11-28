@@ -229,7 +229,7 @@ export const tasks = new Hono()
     .patch(
         "/:taskId",
         sessionMiddleware,
-        zValidator("json", taskSchema.omit({ workspaceId: true })),
+        zValidator("json", taskSchema.partial()),
         async (c) => {
             const user = c.get("user");
             const databases = c.get("databases");

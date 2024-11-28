@@ -19,7 +19,11 @@ import { DataCalendar } from "./data-calendar";
 import { DataFilters } from "./data-filters";
 import { DataKanban } from "./data-kanban";
 
-export const TaskViewSwitcher = () => {
+type Props = {
+    hideProjectFilter?: boolean;
+};
+
+export const TaskViewSwitcher = ({ hideProjectFilter }: Props) => {
     const workspaceId = useWorkspaceId();
     const [{ assigneeId, projectId, status, dueDate, search }, setFilters] =
         useTaskFilters();
@@ -92,7 +96,7 @@ export const TaskViewSwitcher = () => {
 
                 <DotSeparator className="my-4" />
 
-                <DataFilters />
+                <DataFilters hideProjectFilter={hideProjectFilter} />
 
                 <DotSeparator className="my-4" />
 
