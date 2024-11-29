@@ -12,9 +12,9 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 
-import { PageError } from "@/components/page-error";
-import { PageLoader } from "@/components/page-loader";
+import { MemberRole } from "@/types";
 import { ArrowLeft, Loader, MoreHorizontal, ShieldAlert } from "lucide-react";
 
 import { DotSeparator } from "@/components/dot-separator";
@@ -27,8 +27,6 @@ import { useDeleteMember } from "../api/use-delete-member";
 import { useGetMembers } from "../api/use-get-members";
 import { useUpdateMember } from "../api/use-update-member";
 
-import { MemberRole } from "@/types";
-
 export const Members = () => {
     const workspaceId = useWorkspaceId();
     const { data, isLoading } = useGetMembers(workspaceId);
@@ -39,14 +37,6 @@ export const Members = () => {
         title: "Remove Member",
         message: "This member will be removed from the workspace.",
     });
-
-    if (isLoading) {
-        return <PageLoader />;
-    }
-
-    if (!data) {
-        return <PageError />;
-    }
 
     const isPending = updateMember.isPending || deleteMember.isPending;
 
@@ -62,6 +52,10 @@ export const Members = () => {
         if (!ok) return;
         deleteMember.mutate({ param: { memberId } });
     };
+
+    if (isLoading) {
+        return <MemberLoading />;
+    }
 
     return (
         <Card className="size-full border-none shadow-none">
@@ -159,6 +153,51 @@ export const Members = () => {
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
+                        </div>
+                    </Fragment>
+                ))}
+            </CardContent>
+        </Card>
+    );
+};
+
+export const MemberLoading = () => {
+    const workspaceId = useWorkspaceId();
+    return (
+        <Card className="size-full border-none shadow-none">
+            <CardHeader className="flex flex-row items-center gap-x-4 space-y-0 p-7">
+                <Button
+                    variant="link"
+                    size="sm"
+                    className="border-none"
+                    asChild
+                >
+                    <Link href={`/workspaces/${workspaceId}`}>
+                        <ArrowLeft />
+                        Back
+                    </Link>
+                </Button>
+
+                <CardTitle className="text-xl font-bold">
+                    Members List
+                </CardTitle>
+            </CardHeader>
+
+            <div className="px-7">
+                <DotSeparator />
+            </div>
+
+            <CardContent className="p-7">
+                {[1, 2, 3].map((_, index) => (
+                    <Fragment key={index}>
+                        {index !== 0 && <Separator className="my-2.5" />}
+                        <div className="flex items-center gap-2" key={index}>
+                            <Skeleton className="size-10 rounded-full" />
+                            <div className="flex flex-col gap-2">
+                                <Skeleton className="h-4 w-24" />
+                                <Skeleton className="h-3 w-16" />
+                            </div>
+                            <Skeleton className="ml-auto h-6 w-2 self-start" />
                         </div>
                     </Fragment>
                 ))}

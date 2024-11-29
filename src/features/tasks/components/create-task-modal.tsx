@@ -1,7 +1,7 @@
 "use client";
 
 import { ResponsiveModal } from "@/components/responsive-modal";
-import { CreateTaskWrapper } from "./create-task-wrapper";
+import { CreateTaskForm } from "./create-task-form";
 
 import { useCreateTaskModal } from "../hooks/use-create-task-modal";
 
@@ -9,7 +9,7 @@ export const CreateTaskModal = () => {
     const { isOpen, setIsOpen, close } = useCreateTaskModal();
     return (
         <ResponsiveModal open={isOpen} onOpenChange={setIsOpen}>
-            <CreateTaskWrapper onCancel={close} />
+            <CreateTaskForm onCancel={close} />
         </ResponsiveModal>
     );
 };

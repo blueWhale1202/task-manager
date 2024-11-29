@@ -4,12 +4,22 @@ import { useQueryState } from "nuqs";
 import { useCallback } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { Loader, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { UpdatePayload } from "../types";
 
 import { DotSeparator } from "@/components/dot-separator";
+import { PageError } from "@/components/page-error";
 import { DataTable } from "@/features/tasks/components/data-table";
 
 import { columns } from "./columns";
@@ -19,10 +29,10 @@ import { DataKanban } from "./data-kanban";
 
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
+import { useCreateTaskModal } from "../hooks/use-create-task-modal";
 
 import { useBulkUpdateTask } from "../api/use-bulk-update-task";
 import { useGetTasks } from "../api/use-get-tasks";
-import { useCreateTaskModal } from "../hooks/use-create-task-modal";
 import { useTaskFilters } from "../hooks/use-task-filters";
 
 type Props = {
@@ -33,10 +43,14 @@ export const TaskViewSwitcher = ({ hideProjectFilter }: Props) => {
     const workspaceId = useWorkspaceId();
     const paramProjectId = useProjectId();
 
-    const [{ assigneeId, projectId, status, dueDate, search }, setFilters] =
+    const [{ assigneeId, projectId, status, dueDate, search }] =
         useTaskFilters();
 
-    const { data: tasks, isPending } = useGetTasks({
+    const {
+        data: tasks,
+        isLoading,
+        isError,
+    } = useGetTasks({
         workspaceId,
         projectId: paramProjectId || projectId,
         assigneeId,
@@ -62,6 +76,10 @@ export const TaskViewSwitcher = ({ hideProjectFilter }: Props) => {
         },
         [bulkUpdateTask],
     );
+
+    if (isError) {
+        return <PageError message="Failed to load tasks" />;
+    }
 
     return (
         <Tabs
@@ -101,18 +119,11 @@ export const TaskViewSwitcher = ({ hideProjectFilter }: Props) => {
                         New
                     </Button>
                 </div>
-
                 <DotSeparator className="my-4" />
-
                 <DataFilters hideProjectFilter={hideProjectFilter} />
-
                 <DotSeparator className="my-4" />
-
-                {isPending ? (
-                    <div className="flex h-[200px] w-full flex-col items-center justify-center rounded-lg border">
-                        <Loader className="size-5 animate-spin text-muted-foreground" />
-                    </div>
-                ) : (
+                {isLoading && <DataTableLoading />}
+                {!isLoading && (
                     <>
                         <TabsContent value="table" className="mt-0">
                             <DataTable
@@ -136,5 +147,44 @@ export const TaskViewSwitcher = ({ hideProjectFilter }: Props) => {
                 )}
             </div>
         </Tabs>
+    );
+};
+
+export const DataTableLoading = () => {
+    return (
+        <TabsContent value="table" className="mt-0">
+            <div>
+                <div className="rounded-md border">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                {[...Array(5)].map((_, index) => (
+                                    <TableHead key={index}>
+                                        <Skeleton className="h-8 w-full" />
+                                    </TableHead>
+                                ))}
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {[...Array(5)].map((_, index) => (
+                                <TableRow key={index}>
+                                    <TableCell colSpan={6}>
+                                        <Skeleton className="h-8 w-full" />
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+                <div className="flex items-center justify-end space-x-2 py-4">
+                    <Button variant="outline" size="xs" disabled>
+                        Previous
+                    </Button>
+                    <Button variant="outline" size="xs" disabled>
+                        Next
+                    </Button>
+                </div>
+            </div>
+        </TabsContent>
     );
 };

@@ -1,9 +1,9 @@
 "use client";
 
 import { PageError } from "@/components/page-error";
-import { PageLoader } from "@/components/page-loader";
 
 import { EditProjectForm } from "@/features/projects/components/edit-project-form";
+import { SettingLoading } from "../../../settings/page";
 
 import { useGetProject } from "@/features/projects/api/use-get-project";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
@@ -13,7 +13,7 @@ export default function ProjectSettingsPage() {
     const { data: project, isLoading } = useGetProject(projectId);
 
     if (isLoading) {
-        return <PageLoader />;
+        return <SettingLoading title="Project settings" />;
     }
 
     if (!project) {

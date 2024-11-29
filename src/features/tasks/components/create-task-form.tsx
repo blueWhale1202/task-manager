@@ -30,10 +30,14 @@ import { DotSeparator } from "@/components/dot-separator";
 import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 
-import { cn } from "@/lib/utils";
 import { TaskStatus } from "@/types";
-import { MemberOption, ProjectOption } from "../types";
+import { Loader } from "lucide-react";
 
+import { cn } from "@/lib/utils";
+
+import { useGetMembers } from "@/features/members/api/use-get-members";
+import { useGetProjects } from "@/features/projects/api/use-get-projects";
+import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
 import { useCreateTask } from "../api/use-create-task";
 
@@ -41,23 +45,33 @@ type FormValues = z.infer<typeof taskSchema>;
 
 type Props = {
     onCancel?: () => void;
-    projectOptions: ProjectOption[];
-    memberOptions: MemberOption[];
 };
 
-export const CreateTaskForm = ({
-    onCancel,
-    projectOptions,
-    memberOptions,
-}: Props) => {
+export const CreateTaskForm = ({ onCancel }: Props) => {
+    const workspaceId = useWorkspaceId();
+    const projectId = useProjectId();
+
     const form = useForm<FormValues>({
         resolver: zodResolver(taskSchema.omit({ workspaceId: true })),
         defaultValues: {
             name: "",
+            projectId: projectId,
         },
     });
 
-    const workspaceId = useWorkspaceId();
+    const projects = useGetProjects(workspaceId);
+    const members = useGetMembers(workspaceId);
+
+    const projectOptions = projects.data?.documents.map((project) => ({
+        id: project.$id,
+        name: project.name,
+        imageUrl: project.imageUrl,
+    }));
+
+    const memberOptions = members.data?.documents.map((member) => ({
+        id: member.$id,
+        name: member.name,
+    }));
 
     const { mutate, isPending } = useCreateTask();
 
@@ -149,24 +163,43 @@ export const CreateTaskForm = ({
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                {memberOptions.map((member) => (
+                                                {members.isLoading && (
                                                     <SelectItem
-                                                        key={member.id}
-                                                        value={member.id}
+                                                        disabled
+                                                        value="none"
                                                     >
-                                                        <div className="flex items-center gap-x-2">
-                                                            <MemberAvatar
-                                                                className="size-6"
-                                                                name={
-                                                                    member.name
-                                                                }
-                                                            />
+                                                        <div className="flex items-center gap-2">
+                                                            <Loader className="size-4 animate-spin text-muted-foreground" />
                                                             <span>
-                                                                {member.name}
+                                                                Loading
+                                                                members...
                                                             </span>
                                                         </div>
                                                     </SelectItem>
-                                                ))}
+                                                )}
+
+                                                {memberOptions?.map(
+                                                    (member) => (
+                                                        <SelectItem
+                                                            key={member.id}
+                                                            value={member.id}
+                                                        >
+                                                            <div className="flex items-center gap-x-2">
+                                                                <MemberAvatar
+                                                                    className="size-6"
+                                                                    name={
+                                                                        member.name
+                                                                    }
+                                                                />
+                                                                <span>
+                                                                    {
+                                                                        member.name
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        </SelectItem>
+                                                    ),
+                                                )}
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
@@ -246,7 +279,21 @@ export const CreateTaskForm = ({
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                {projectOptions.map(
+                                                {projects.isLoading && (
+                                                    <SelectItem
+                                                        disabled
+                                                        value="none"
+                                                    >
+                                                        <div className="flex items-center gap-2">
+                                                            <Loader className="size-4 animate-spin text-muted-foreground" />
+                                                            <span>
+                                                                Loading
+                                                                projects...
+                                                            </span>
+                                                        </div>
+                                                    </SelectItem>
+                                                )}
+                                                {projectOptions?.map(
                                                     (project) => (
                                                         <SelectItem
                                                             key={project.id}

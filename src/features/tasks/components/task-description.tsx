@@ -38,7 +38,7 @@ export const TaskDescription = ({ task }: Props) => {
     return (
         <div className="rounded-lg border p-4">
             <div className="flex items-center justify-between">
-                <p className="text-lg font-semibold">Overview</p>
+                <p className="text-lg font-semibold">Description</p>
                 <Button
                     size="sm"
                     variant="secondary"

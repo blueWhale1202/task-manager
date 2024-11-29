@@ -36,16 +36,6 @@ export const DataFilters = ({ hideProjectFilter }: Props) => {
     const [{ assigneeId, projectId, status, dueDate, search }, setFilters] =
         useTaskFilters();
 
-    const isLoading = projects.isLoading || members.isLoading;
-
-    if (isLoading) {
-        return (
-            <div className="flex h-8 items-center justify-center">
-                <Loader className="size-6 animate-spin text-muted-foreground" />
-            </div>
-        );
-    }
-
     const projectOptions = projects.data?.documents?.map((project) => ({
         label: project.name,
         value: project.$id,
@@ -103,6 +93,15 @@ export const DataFilters = ({ hideProjectFilter }: Props) => {
                 <SelectContent>
                     <SelectItem value="all">All assignees</SelectItem>
                     <SelectSeparator />
+                    {members.isLoading && (
+                        <SelectItem disabled value="none">
+                            <div className="flex items-center gap-2">
+                                <Loader className="size-4 animate-spin text-muted-foreground" />
+                                <span>Loading members...</span>
+                            </div>
+                        </SelectItem>
+                    )}
+
                     {memberOptions?.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
                             <div className="mr-2 flex items-center gap-x-2">
@@ -134,6 +133,14 @@ export const DataFilters = ({ hideProjectFilter }: Props) => {
                     <SelectContent>
                         <SelectItem value="all">All projects</SelectItem>
                         <SelectSeparator />
+                        {projects.isLoading && (
+                            <SelectItem disabled value="none">
+                                <div className="flex items-center gap-2">
+                                    <Loader className="size-4 animate-spin text-muted-foreground" />
+                                    <span>Loading projects...</span>
+                                </div>
+                            </SelectItem>
+                        )}
                         {projectOptions?.map((option) => (
                             <SelectItem key={option.value} value={option.value}>
                                 <div className="mr-2 flex items-center gap-x-2">

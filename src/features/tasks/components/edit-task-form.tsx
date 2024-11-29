@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -30,48 +32,70 @@ import { DotSeparator } from "@/components/dot-separator";
 import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 
-import { Task, TaskStatus } from "@/types";
-import { MemberOption, ProjectOption } from "../types";
+import { TaskStatus } from "@/types";
+import { Loader } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+import { useGetMembers } from "@/features/members/api/use-get-members";
+import { useGetProjects } from "@/features/projects/api/use-get-projects";
 import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
+import { useGetTask } from "../api/use-get-task";
 import { useUpdateTask } from "../api/use-update-task";
 
 type FormValues = z.infer<typeof taskSchema>;
 
 type Props = {
+    id: string;
     onCancel?: () => void;
-    projectOptions: ProjectOption[];
-    memberOptions: MemberOption[];
-    initialData: Task;
 };
 
-export const EditTaskForm = ({
-    onCancel,
-    projectOptions,
-    memberOptions,
-    initialData,
-}: Props) => {
+export const EditTaskForm = ({ id, onCancel }: Props) => {
+    const workspaceId = useWorkspaceId();
+
+    const projects = useGetProjects(workspaceId);
+    const members = useGetMembers(workspaceId);
+    const { data: task, isLoading } = useGetTask(id);
+
+    const projectOptions = projects.data?.documents.map((project) => ({
+        id: project.$id,
+        name: project.name,
+        imageUrl: project.imageUrl,
+    }));
+
+    const memberOptions = members.data?.documents.map((member) => ({
+        id: member.$id,
+        name: member.name,
+    }));
+
     const form = useForm<FormValues>({
         resolver: zodResolver(
             taskSchema.omit({ workspaceId: true, description: true }),
         ),
-        defaultValues: {
-            ...initialData,
-            dueDate: initialData.dueDate
-                ? new Date(initialData.dueDate)
-                : undefined,
-        },
+        // defaultValues: {
+        //     ...initialData,
+        //     dueDate: initialData.dueDate
+        //         ? new Date(initialData.dueDate)
+        //         : undefined,
+        // },
     });
 
-    const workspaceId = useWorkspaceId();
+    useEffect(() => {
+        if (isLoading) return;
+
+        if (task) {
+            form.reset({
+                ...task,
+                dueDate: task.dueDate ? new Date(task.dueDate) : undefined,
+            });
+        }
+    }, [form, isLoading, task]);
 
     const { mutate, isPending } = useUpdateTask();
 
     const onSubmit = (values: FormValues) => {
         mutate(
-            { json: values, param: { taskId: initialData.$id } },
+            { json: values, param: { taskId: task!.$id } },
             {
                 onSuccess: () => {
                     form.reset();
@@ -84,9 +108,7 @@ export const EditTaskForm = ({
     return (
         <Card className="size-full border-none shadow-none">
             <CardHeader className="p-7">
-                <CardTitle className="text-xl font-bold">
-                    Edit Task: {initialData.name}
-                </CardTitle>
+                <CardTitle className="text-xl font-bold">Edit Task</CardTitle>
             </CardHeader>
 
             <div className="px-7">
@@ -107,7 +129,12 @@ export const EditTaskForm = ({
                                     <FormLabel>Task Name</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="Enter task name"
+                                            disabled={isLoading}
+                                            placeholder={
+                                                isLoading
+                                                    ? "Loading..."
+                                                    : "Enter task name"
+                                            }
                                             {...field}
                                         />
                                     </FormControl>
@@ -125,8 +152,13 @@ export const EditTaskForm = ({
                                     <FormLabel>Due Date</FormLabel>
                                     <FormControl>
                                         <DatePicker
+                                            disabled={isLoading}
                                             {...field}
-                                            placeholder="Select due date"
+                                            placeholder={
+                                                isLoading
+                                                    ? "Loading..."
+                                                    : "Select due date"
+                                            }
                                         />
                                     </FormControl>
 
@@ -143,8 +175,8 @@ export const EditTaskForm = ({
                                     <FormLabel>Assignee</FormLabel>
                                     <FormControl>
                                         <Select
+                                            value={field.value}
                                             onValueChange={field.onChange}
-                                            defaultValue={field.value}
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
@@ -152,24 +184,42 @@ export const EditTaskForm = ({
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                {memberOptions.map((member) => (
+                                                {members.isLoading && (
                                                     <SelectItem
-                                                        key={member.id}
-                                                        value={member.id}
+                                                        disabled
+                                                        value="none"
                                                     >
-                                                        <div className="flex items-center gap-x-2">
-                                                            <MemberAvatar
-                                                                className="size-6"
-                                                                name={
-                                                                    member.name
-                                                                }
-                                                            />
+                                                        <div className="flex items-center gap-2">
+                                                            <Loader className="size-4 animate-spin text-muted-foreground" />
                                                             <span>
-                                                                {member.name}
+                                                                Loading
+                                                                members...
                                                             </span>
                                                         </div>
                                                     </SelectItem>
-                                                ))}
+                                                )}
+                                                {memberOptions?.map(
+                                                    (member) => (
+                                                        <SelectItem
+                                                            key={member.id}
+                                                            value={member.id}
+                                                        >
+                                                            <div className="flex items-center gap-x-2">
+                                                                <MemberAvatar
+                                                                    className="size-6"
+                                                                    name={
+                                                                        member.name
+                                                                    }
+                                                                />
+                                                                <span>
+                                                                    {
+                                                                        member.name
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        </SelectItem>
+                                                    ),
+                                                )}
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
@@ -188,11 +238,18 @@ export const EditTaskForm = ({
                                     <FormControl>
                                         <Select
                                             onValueChange={field.onChange}
-                                            defaultValue={field.value}
+                                            value={field.value}
+                                            disabled={isLoading}
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder="Select assignee" />
+                                                    <SelectValue
+                                                        placeholder={
+                                                            isLoading
+                                                                ? "Loading..."
+                                                                : "Select status"
+                                                        }
+                                                    />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
@@ -241,7 +298,7 @@ export const EditTaskForm = ({
                                     <FormControl>
                                         <Select
                                             onValueChange={field.onChange}
-                                            defaultValue={field.value}
+                                            value={field.value}
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
@@ -249,7 +306,21 @@ export const EditTaskForm = ({
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                {projectOptions.map(
+                                                {projects.isLoading && (
+                                                    <SelectItem
+                                                        disabled
+                                                        value="none"
+                                                    >
+                                                        <div className="flex items-center gap-2">
+                                                            <Loader className="size-4 animate-spin text-muted-foreground" />
+                                                            <span>
+                                                                Loading
+                                                                projects...
+                                                            </span>
+                                                        </div>
+                                                    </SelectItem>
+                                                )}
+                                                {projectOptions?.map(
                                                     (project) => (
                                                         <SelectItem
                                                             key={project.id}

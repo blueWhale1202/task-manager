@@ -13,7 +13,6 @@ import {
 import { Loader } from "lucide-react";
 import { RiAddCircleFill } from "react-icons/ri";
 
-import { Workspace } from "@/types";
 import { WorkspaceAvatar } from "./workspace-avatar";
 
 import { useGetWorkspaces } from "../api/use-get-workspaces";
@@ -31,10 +30,6 @@ export const WorkspaceSwitcher = () => {
         router.push(`/workspaces/${workspaceId}`);
     };
 
-    if (!workspaces) {
-        return null;
-    }
-
     return (
         <div className="flex flex-col gap-y-2">
             <div className="flex items-center justify-between">
@@ -47,53 +42,33 @@ export const WorkspaceSwitcher = () => {
                 />
             </div>
 
-            <Select onValueChange={onSelect} value={workspaceId}>
+            <Select
+                onValueChange={onSelect}
+                disabled={isLoading}
+                value={isLoading ? undefined : workspaceId}
+            >
                 <SelectTrigger className="w-full bg-neutral-200 p-1 font-medium focus:ring-transparent">
-                    <SelectValue placeholder="No workspace selected" />
+                    {isLoading && (
+                        <Loader className="-mr-8 ml-1 size-4 animate-spin" />
+                    )}
+                    <SelectValue placeholder="Loading workspace..." />
                 </SelectTrigger>
                 <SelectContent>
-                    <WorkspaceContent
-                        isLoading={isLoading}
-                        workspaces={workspaces.documents}
-                    />
+                    {workspaces?.documents.map((workspace) => (
+                        <SelectItem key={workspace.$id} value={workspace.$id}>
+                            <div className="flex items-center justify-start gap-3 font-medium">
+                                <WorkspaceAvatar
+                                    name={workspace.name}
+                                    image={workspace.imageUrl}
+                                />
+                                <span className="truncate">
+                                    {workspace.name}
+                                </span>
+                            </div>
+                        </SelectItem>
+                    ))}
                 </SelectContent>
             </Select>
         </div>
     );
-};
-
-type Props = {
-    isLoading: boolean;
-    workspaces?: Workspace[];
-};
-export const WorkspaceContent = ({ isLoading, workspaces }: Props) => {
-    if (isLoading) {
-        return (
-            <SelectItem disabled value="none">
-                <div className="flex text-neutral-700">
-                    <Loader className="mr-2 size-5 animate-spin" />
-                </div>
-            </SelectItem>
-        );
-    }
-
-    if (!workspaces || !workspaces.length) {
-        return (
-            <SelectItem disabled value="none">
-                <div className="text-neutral-700">No workspaces</div>
-            </SelectItem>
-        );
-    }
-
-    return workspaces.map((workspace) => (
-        <SelectItem key={workspace.$id} value={workspace.$id}>
-            <div className="flex items-center justify-start gap-3 font-medium">
-                <WorkspaceAvatar
-                    name={workspace.name}
-                    image={workspace.imageUrl}
-                />
-                <span className="truncate">{workspace.name}</span>
-            </div>
-        </SelectItem>
-    ));
 };
