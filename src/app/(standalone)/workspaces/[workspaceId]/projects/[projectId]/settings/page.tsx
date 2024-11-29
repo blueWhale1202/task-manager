@@ -3,7 +3,7 @@
 import { PageError } from "@/components/page-error";
 
 import { EditProjectForm } from "@/features/projects/components/edit-project-form";
-import { SettingLoading } from "../../../settings/page";
+import { SettingLoading } from "@/features/projects/components/settings-loading";
 
 import { useGetProject } from "@/features/projects/api/use-get-project";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
