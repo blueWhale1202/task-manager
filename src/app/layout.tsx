@@ -21,10 +21,10 @@ export const metadata: Metadata = {
         description: "Helps you manage your tasks efficiently",
         type: "website",
         locale: "en_US",
-        url: "https://task-manager.vercel.app",
+        url: "https://task-manager-lime-chi.vercel.app",
         images: [
             {
-                url: "https://task-manager.vercel.app/og-image.png",
+                url: "https://task-manager-lime-chi.vercel.app/og-image.png",
                 width: 1200,
                 height: 630,
                 alt: "Task Manager",
