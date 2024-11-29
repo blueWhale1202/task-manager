@@ -22,13 +22,7 @@ export async function generateMetadata(
         title: workspace.name,
         description: `Join ${workspace.name} to collaborate with your team and get things done together.`,
         openGraph: {
-            images: [
-                {
-                    url: workspace.imageUrl,
-                    alt: workspace.name,
-                },
-                ...previousImages,
-            ],
+            images: [...previousImages],
         },
     };
 }
