@@ -1,37 +1,38 @@
-"use client";
+import { InviteWorkspacePage } from "@/features/workspace/components/invite-workspace";
+import { getWorkspace } from "@/features/workspace/queries/get-workspace";
+import { Metadata, ResolvingMetadata } from "next";
 
-import { PageError } from "@/components/page-error";
-import { PageLoader } from "@/components/page-loader";
+type Props = {
+    params: {
+        workspaceId: string;
+    };
+};
 
-import { JoinWorkspaceForm } from "@/features/workspace/components/join-workspace-form";
+export async function generateMetadata(
+    { params }: Props,
+    parent: ResolvingMetadata,
+): Promise<Metadata> {
+    const { workspaceId } = params;
 
-import { useGetWorkspaceInfo } from "@/features/workspace/api/use-get-workspace-info";
-import { useInviteCode } from "@/features/workspace/hooks/use-invite-code";
-import { useWorkspaceId } from "@/features/workspace/hooks/use-workspace-id";
+    const workspace = await getWorkspace(workspaceId);
 
-export default function InvitePage() {
-    const workspaceId = useWorkspaceId();
-    const inviteCode = useInviteCode();
+    const previousImages = (await parent).openGraph?.images || [];
 
-    const { data, isLoading } = useGetWorkspaceInfo(workspaceId);
+    return {
+        title: workspace.name,
+        description: `Join ${workspace.name} to collaborate with your team and get things done together.`,
+        openGraph: {
+            images: [
+                {
+                    url: workspace.imageUrl,
+                    alt: workspace.name,
+                },
+                ...previousImages,
+            ],
+        },
+    };
+}
 
-    if (isLoading) {
-        return <PageLoader />;
-    }
-
-    if (!data) {
-        return <PageError message="Workspace not found" />;
-    }
-
-    return (
-        <div className="w-full lg:max-w-xl">
-            <JoinWorkspaceForm
-                initialValues={{
-                    workspaceId,
-                    inviteCode,
-                    name: data.name,
-                }}
-            />
-        </div>
-    );
+export default function Page() {
+    return <InviteWorkspacePage />;
 }

@@ -97,6 +97,7 @@ export const workspace = new Hono()
             data: {
                 $id: workspace.$id,
                 name: workspace.name,
+                imageUrl: workspace.imageUrl,
             },
         });
     })
